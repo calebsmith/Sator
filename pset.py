@@ -47,7 +47,7 @@ class SetRowBase():
         if not self._ordered and isinstance(other, (tuple, list)):
             other = set(other)
         #Is the other a PSet/PCSet or builtin ?
-        if isinstance(other, (PSetBase, PSet, PCSet)):
+        if isinstance(other, (SetRowBase, PSet, PCSet)):
             return self.ppc == other.ppc
         if isinstance(other, (int, long)):
             return self.ppc == [other]
@@ -278,39 +278,36 @@ class PCBase():
 
 
 class ToneRow(SetRowBase, PCBase):
-    _ordered = True
     _modulus = 12
 
-    class ToneRowException(Exception):
+    class IncompleteException(Exception):
         pass
 
     def __init__(self, *args, **kwargs):
+        kwargs.update({'multiset': False, 'ordered': True})
         SetRowBase.__init__(self, *args, **kwargs)
         if len(self.ppc) < self._mod:
             msg = 'Tone rows must be instantiated with a number of ' + \
                   'pitches or pcs equal to their modulus'
-            raise self.ToneRowException(msg)
+            raise self.IncompleteException(msg)
 
     @property
     def P(self):
-        return self.ppc
+        return self
 
     @property
     def R(self):
         ppc = self.ppc
         ppc.reverse()
-        return ppc
+        return self.copy(ppc)
 
     @property
     def I(self):
-        ppc = self.ppc
-        return [(p * -1) % self._mod for p in ppc]
+        return self.invert()
 
     @property
     def RI(self):
-        ppc = self.I
-        ppc.reverse()
-        return ppc
+        return self.R.I
 
     def multiset(self, multi):
         self._multiset = False
