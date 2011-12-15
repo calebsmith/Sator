@@ -76,6 +76,9 @@ class SetRowBase():
         except IndexError:
             return None
 
+    def __setitem__(self, key, value):
+        self.pitches[key] = value
+
     def __iter__(self):
         for p in self.ppc:
             yield p
@@ -98,12 +101,12 @@ class SetRowBase():
             pitches = self.pitches[:place]
             pitches.append(pitch)
             pitches.extend(self.pitches[place:])
-            self.pitches = pitches
+            self[:] = pitches
         except IndexError:
             self.pitches.append(pitch)
 
     def clear(self):
-        self.pitches = []
+        self[:] = []
 
     def mod(self, new_mod):
         self._mod = new_mod
@@ -195,10 +198,10 @@ class SetRowBase():
         return self.copy(result)
 
     def t(self, sub_n):
-        self.pitches = (self.transpose(sub_n)).pitches
+        self[:] = (self.transpose(sub_n)).pitches
 
     def i(self, sub_n=0):
-        self.pitches = (self.invert(sub_n)).pitches
+        self[:] = (self.invert(sub_n)).pitches
 
     def _t_rotations_base(self):
         return (self.transpose(n) for n in self.each_n())
@@ -243,38 +246,23 @@ class SetRowBase():
         return self.copy([n for n in self.each_n() if n not in self.pcs])
 
     def c(self):
-        self.pitches = self.literal_compliment.pitches
+        self[:] = self.literal_compliment.pitches
 
 
 class PCBase():
     """Base class for Tone rows and PC sets"""
-    
-    def __sub__(self, other):
-        """Remove all instances of a given pc from a pcset"""
-        rm_pcs = other
-        if isinstance(other, (int, long)):
-            rm_pcs = [other]
-        if isinstance(other, set):
-            rm_pcs = [int(num) for num in other]
-        for pc in rm_pcs:
-            self._rm_pc(pc)
-        return self
-
-    def _rm_pc(self, pc):
-        while pc in self.pitches:
-            self.pitches.remove(pc)
 
     def m(self, sub_n=0):
-        self.pitches = (self.transpose_multiply(sub_n, self._default_m)).pitches
+        self[:] = (self.transpose_multiply(sub_n, self._default_m)).pitches
 
     def mi(self, sub_n=0):
         sub_m = self._mod - self._default_m
-        self.pitches = (self.transpose_multiply(sub_n, sub_m)).pitches
+        self[:] = (self.transpose_multiply(sub_n, sub_m)).pitches
         
     def t_m(self, sub_n=0, sub_m=0):
         if not sub_m:
             sub_m = self._default_m
-        self.pitches = (self.transpose_multiply(sub_n, sub_m)).pitches
+        self[:] = (self.transpose_multiply(sub_n, sub_m)).pitches
 
 
 class ToneRow(SetRowBase, PCBase):
@@ -309,6 +297,9 @@ class ToneRow(SetRowBase, PCBase):
     def RI(self):
         return self.R.I
 
+    def ordered(self, order):
+        self._ordered = True
+
     def multiset(self, multi):
         self._multiset = False
 
@@ -330,7 +321,7 @@ class PSetBase(SetRowBase):
 
     def setint(self, integer=None):
         if integer:
-            self.pitches = utils.fromint(integer)
+            self[:] = utils.fromint(integer)
         else:
             return utils.setint(self.unique_pcs)
 
@@ -437,7 +428,7 @@ class PSetBase(SetRowBase):
         if fname:
             fset = utils.from_forte(fname)
             if fset:
-                self.pitches = fset
+                self[:] = fset
         else:
             return utils.forte_name(self.pcint)
 
@@ -482,6 +473,21 @@ class PCSet(PSetBase, PCBase):
     A pitch class set which adds pitch class only methos
     """
 
+    def __sub__(self, other):
+        """Remove all instances of a given pc from a pcset"""
+        rm_pcs = other
+        if isinstance(other, (int, long)):
+            rm_pcs = [other]
+        if isinstance(other, set):
+            rm_pcs = [int(num) for num in other]
+        for pc in rm_pcs:
+            self._rm_pc(pc)
+        return self
+
+    def _rm_pc(self, pc):
+        while pc in self.pitches:
+            self.pitches.remove(pc)
+
     def z(self):
         other = self.zpartner
         if other:
@@ -497,8 +503,8 @@ class PSet(PSetBase):
 
     _ordered = True
 
-    def remove(self, place):
+    def remove(self, key):
         try:
-            self.pitches = self.pitches[:place] + self.pitches[place+1:]
+            self[:] = self[:key] + self[key + 1:]
         except IndexError:
             pass
