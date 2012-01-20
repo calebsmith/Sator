@@ -54,7 +54,16 @@ class PrimeAndRotationsTest(PrimeTestCase):
                 tto_ints.append((num, index_t, index_m))
         tto_ints.sort()
         tto = tto_ints[0]
-        return (tto[1], tto[2])
+        oper = tto[2]
+        if oper == 0:
+            m = 1
+        elif oper == 1:
+            m = self.pcset._mod - 1
+        elif oper == 2:
+            m = self.pcset._default_m
+        elif oper == 3:
+            m = self.pcset._mod - self.pcset._default_m
+        return (tto[1], m)
 
 
     def testT_rotations(self):

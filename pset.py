@@ -392,11 +392,8 @@ class PSetBase(SetRowBase):
         low_vals =[min(izip(operation, count())) \
             for operation in self.rotation_ints]
         min_val = min(izip(low_vals, count()))
-        return (min_val[0][1], min_val[1])
-
-    @property
-    def prime(self):
-        n, oper = self.prime_operation
+        n = min_val[0][1]
+        oper = min_val[1]
         if oper == 0:
             m = 1
         elif oper == 1:
@@ -405,6 +402,11 @@ class PSetBase(SetRowBase):
             m = self._default_m
         elif oper == 3:
             m = self._mod - self._default_m
+        return (n, m)
+
+    @property
+    def prime(self):
+        n, m = self.prime_operation
         return PCSet(self.copy(utils.transpose_multiply(n, m, self.pitches)))
 
     @property
