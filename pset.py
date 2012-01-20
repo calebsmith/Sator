@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from itertools import count, izip
+from itertools import count, izip, combinations
 
 import utils
 from const import HIGH_PITCH_LIMIT, LOW_PITCH_LIMIT, Z_PARTNERS
@@ -328,20 +328,7 @@ class PSetBase(SetRowBase):
         return utils.setint(self.prime)
 
     def each_card(self):
-        bins = []
-        for num in range(0, self._mod):
-            bins.append(1) if num < self.cardinality else bins.append(0)
-        maxint = 0
-        minint = 0
-        for index, bin in enumerate(bins):
-            if bin:
-                minint += 2 ** index
-                maxint += 2 ** (self._mod - index - 1)
-        other = self.copy()
-        for num in range(minint, maxint + 1):
-            other = other.fromint(num)
-            if other.cardinality == self.cardinality:
-                yield other
+        return combinations(self.each_n(), self.cardinality)
 
     def each_set(self):
         return (self.copy(utils.fromint(integer)) \
@@ -494,7 +481,7 @@ class PCSet(PSetBase, PCBase):
     def z(self):
         other = self.zpartner
         if other:
-            self = other.copy()
+            self.pitches = other.pitches
 
     @property
     def abstract_compliment(self):
