@@ -1,18 +1,6 @@
 #!/usr/bin/env python
 from const import FORTE_NAMES, FORTE_INTS
 
-def transpose(sub_n=0, pitches=[]):
-    return [pitch + sub_n for pitch in pitches]
-
-def invert(sub_n=0, pitches=[]):
-    return transpose(sub_n, multiply(-1, pitches))
-
-def multiply(sub_m, pitches=[]):
-    return [pitch * sub_m for pitch in pitches]
-
-def transpose_multiply(sub_n, sub_m, pitches=[]):
-    result = multiply(sub_m, pitches)
-    return transpose(sub_n, result)
 
 def setint(pcs):
     """Find the integer representation of an unordered PC set"""

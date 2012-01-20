@@ -4,6 +4,20 @@ from itertools import count, izip
 import utils
 from const import HIGH_PITCH_LIMIT, LOW_PITCH_LIMIT, Z_PARTNERS
 
+
+def transpose(pitches, sub_n=0):
+    return [pitch + sub_n for pitch in pitches]
+
+def invert(pitches, sub_n=0):
+    return transpose(multiply(pitches, -1), sub_n)
+
+def multiply(pitches, sub_m):
+    return [pitch * sub_m for pitch in pitches]
+
+def transpose_multiply(pitches, sub_n, sub_m):
+    result = multiply(pitches, sub_m)
+    return transpose(result, sub_n)
+
 class SetRowBase():
     """Base class for PC/pitch sets and tone rows"""
 
@@ -179,16 +193,16 @@ class SetRowBase():
             yield num
 
     def _transpose(self, sub_n=0):
-        return self.copy(utils.transpose(sub_n, self.pitches))
+        return self.copy(transpose(self.pitches, sub_n))
 
     def _invert(self, sub_n=0):
-        return self.copy(utils.invert(sub_n, self.pitches))
+        return self.copy(invert(self.pitches, sub_n))
 
     def _transpose_multiply(self, sub_n=0, sub_m=0):
         if not sub_m:
             sub_m = self._default_m
         result = [pc % self._mod for pc in \
-                  utils.transpose_multiply(sub_n, sub_m, self.pitches)]
+                  transpose_multiply(self.pitches, sub_n, sub_m)]
         return self.copy(result)
 
     def t(self, sub_n):
@@ -407,7 +421,7 @@ class PSetBase(SetRowBase):
     @property
     def prime(self):
         n, m = self.prime_operation
-        return PCSet(self.copy(utils.transpose_multiply(n, m, self.pitches)))
+        return PCSet(self.copy(transpose_multiply(self.pitches, n, m)))
 
     @property
     def mpartner(self):
