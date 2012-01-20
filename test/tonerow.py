@@ -33,11 +33,11 @@ class ToneRowTests(TestCase):
         self.assertEqual(self.tonerow.R, r)
 
     def testI(self):
-        i = self.tonerow.invert()
+        i = self.tonerow._invert()
         self.assertEqual(self.tonerow.I, i)
 
     def testRI(self):
-        i = self.tonerow.invert()
+        i = self.tonerow._invert()
         ri = i.ppc
         ri.reverse()
         self.assertEqual(self.tonerow.RI, ri)       

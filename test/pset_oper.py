@@ -42,41 +42,33 @@ class VarEqualsTnTm(TestCase):
         self.pset = PSet(self.l)
 
     def testTranspose(self):
-        a = self.pcset.transpose(5)
+        a = self.pcset._transpose(5)
         self.assertEqual(a.pitches, [5, 7, 10, 25, 4])
         self.assertEqual(a.uo_pcs, [1, 4, 5, 7, 10])
         self.assertEqual(a.__class__, PCSet)
-        b = self.pset.transpose(5)
+        b = self.pset._transpose(5)
         self.assertEqual(b.pitches, [5, 7, 10, 25, 4])
         self.assertEqual(b.__class__, PSet)
 
     def testInvert(self):
-        a = self.pcset.invert()
+        a = self.pcset._invert()
         self.assertEqual(a.pitches, [0, -2, -5, -20, 1])
         self.assertEqual(a.uo_pcs, [0, 1, 4, 7, 10])
         self.assertEqual(a.__class__, PCSet)
-        b = self.pset.invert(3)
+        b = self.pset._invert(3)
         self.assertEqual(b.pitches, [3, 1, -2, -17, 4])
         self.assertEqual(b.__class__, PSet)
 
-    def testMultiply(self):
-        a = self.pcset.multiply()
-        b = self.pcset.multiply(7)
-        self.assertEqual(a.pcs, [0, 10, 1, 4, 7])
-        self.assertEqual(a.__class__, PCSet)
-        self.assertEqual(b.pcs, [0, 2, 11, 8, 5])
-
     def testTranspose_multiply(self):
-        a = self.pcset.transpose_multiply(1, 11)
-        b = self.pset.transpose_multiply(5, 5)
-        c = self.pset.transpose_multiply(0, 5)
-        d = self.pcset.transpose_multiply(1, 1)
-        self.assertEqual(a, a.transpose_multiply(0, 1))
-        self.assertEqual(a.multiply(), a.transpose_multiply())
+        a = self.pcset._transpose_multiply(1, 11)
+        b = self.pset._transpose_multiply(5, 5)
+        c = self.pset._transpose_multiply(0, 5)
+        d = self.pcset._transpose_multiply(1, 1)
+        self.assertEqual(a, a._transpose_multiply(0, 1))
         self.assertEqual(a.pcs, [1, 11, 8, 5, 2])
         self.assertEqual(b.pcs, [5, 3, 6, 9, 0])
-        self.assertEqual(c.pcs, self.pcset.multiply())
-        self.assertEqual(d, self.pcset.transpose(1))
+        self.assertEqual(c.pcs, self.pcset._transpose_multiply())
+        self.assertEqual(d, self.pcset._transpose(1))
 
 
 class TnTmInPlace(TestCase):

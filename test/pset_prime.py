@@ -23,10 +23,10 @@ class PrimeAndRotationsTest(PrimeTestCase):
     def make_rotations(self):
         """Helper for checking .rotations and .rotation_ints"""
         self.t_only = [[self.pcset.uo_pcs]]
-        self.m_only = self.t_only + [[self.pcset.multiply().uo_pcs]]
-        self.i_only = self.t_only + [[self.pcset.invert().uo_pcs]]
-        self.im_only = self.t_only + [[self.pcset.invert().uo_pcs]] + \
-            [[self.pcset.multiply().uo_pcs]]
+        self.m_only = self.t_only + [[self.pcset._transpose_multiply().uo_pcs]]
+        self.i_only = self.t_only + [[self.pcset._invert().uo_pcs]]
+        self.im_only = self.t_only + [[self.pcset._invert().uo_pcs]] + \
+            [[self.pcset._transpose_multiply().uo_pcs]]
         self.ti_rots = [self.t_rots] + [self.i_rots]
         self.tm_rots = [self.t_rots] + [self.m_rots]
         self.im_rots = [self.i_rots] + [self.m_rots]
@@ -62,16 +62,16 @@ class PrimeAndRotationsTest(PrimeTestCase):
         self.assertEqual(self.t_rots[-1], [0, 1, 2, 3, 5, 11])
 
     def testI_rotations(self):
-        self.assertEqual(self.i_rots[0], self.pcset.invert().uo_pcs)
+        self.assertEqual(self.i_rots[0], self.pcset._invert().uo_pcs)
         self.assertEqual(self.i_rots[-1], [5, 7, 8, 9, 10, 11])
 
     def testM_rotations(self):
-        self.assertEqual(self.m_rots[0], self.pcset.multiply().uo_pcs)
+        self.assertEqual(self.m_rots[0], self.pcset._transpose_multiply().uo_pcs)
         self.assertEqual(self.m_rots[-1], [2, 4, 5, 7, 9, 11])
 
     def testMi_rotations(self):
         self.assertEqual(self.mi_rots[0],
-                         self.pcset.multiply().invert().uo_pcs)
+                         self.pcset._transpose_multiply()._invert().uo_pcs)
         self.assertEqual(self.mi_rots[-1], [1, 3, 5, 6, 8, 11])
 
     def testAll_rotations(self):
@@ -197,7 +197,7 @@ class PrimeReliantTests(PrimeTestCase):
 
     def testMPartner(self):
         for each in self.sets:
-            self.assertEqual(each.mpartner, each.multiply().prime)
+            self.assertEqual(each.mpartner, each._transpose_multiply().prime)
 
     def testLiteralCompliment(self):
         self.assertEqual(self.pcset.literal_compliment, [5, 7, 8, 9, 10, 11])

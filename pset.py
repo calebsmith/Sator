@@ -178,19 +178,13 @@ class SetRowBase():
         for num in xrange(0, self._mod):
             yield num
 
-    def transpose(self, sub_n=0):
+    def _transpose(self, sub_n=0):
         return self.copy(utils.transpose(sub_n, self.pitches))
 
-    def invert(self, sub_n=0):
+    def _invert(self, sub_n=0):
         return self.copy(utils.invert(sub_n, self.pitches))
 
-    def multiply(self, sub_m=0):
-        if not sub_m:
-            sub_m = self._default_m
-        result = [pc % self._mod for pc in utils.multiply(sub_m, self.pitches)]
-        return self.copy(result)
-
-    def transpose_multiply(self, sub_n=0, sub_m=0):
+    def _transpose_multiply(self, sub_n=0, sub_m=0):
         if not sub_m:
             sub_m = self._default_m
         result = [pc % self._mod for pc in \
@@ -198,40 +192,30 @@ class SetRowBase():
         return self.copy(result)
 
     def t(self, sub_n):
-        self[:] = (self.transpose(sub_n)).pitches
+        self[:] = (self._transpose(sub_n)).pitches
 
     def i(self, sub_n=0):
-        self[:] = (self.invert(sub_n)).pitches
-
-    def _t_rotations_base(self):
-        return (self.transpose(n) for n in self.each_n())
-
-    def _i_rotations_base(self):
-        return (self.invert(n) for n in self.each_n())
-
-    def _m_rotations_base(self):
-        return (self.transpose_multiply(n) for n in self.each_n())
-
-    def _mi_rotations_base(self):
-        return (self.transpose_multiply(n, self._default_m * -1) \
-                for n in self.each_n())
+        self[:] = (self._invert(sub_n)).pitches
 
     @property
     def t_rotations(self):
-        return [self.copy(rot) for rot in self._t_rotations_base()]
+        return [self.copy(rot) for rot in [self._transpose(n) \
+                                           for n in self.each_n()]]
 
     @property
     def i_rotations(self):
-        return [self.copy(rot) for rot in self._i_rotations_base()]
+        return [self.copy(rot) for rot in [self._invert(n) \
+                                           for n in self.each_n()]]
 
     @property
     def m_rotations(self):
-        return [self.copy(rot) for rot in self._m_rotations_base()]
+        return [self.copy(rot) for rot in [self._transpose_multiply(n) \
+                                           for n in self.each_n()]]
 
     @property
     def mi_rotations(self):
-        return [self.copy(rot) for rot in self._mi_rotations_base()]
-
+        return [self.copy(rot) for rot in [self._transpose_multiply(n, self._default_m * -1) \
+                                           for n in self.each_n()]]
     @property
     def all_rotations(self):
         result = []
@@ -253,16 +237,16 @@ class PCBase():
     """Base class for Tone rows and PC sets"""
 
     def m(self, sub_n=0):
-        self[:] = (self.transpose_multiply(sub_n, self._default_m)).pitches
+        self[:] = (self._transpose_multiply(sub_n, self._default_m)).pitches
 
     def mi(self, sub_n=0):
         sub_m = self._mod - self._default_m
-        self[:] = (self.transpose_multiply(sub_n, sub_m)).pitches
+        self[:] = (self._transpose_multiply(sub_n, sub_m)).pitches
         
     def t_m(self, sub_n=0, sub_m=0):
         if not sub_m:
             sub_m = self._default_m
-        self[:] = (self.transpose_multiply(sub_n, sub_m)).pitches
+        self[:] = (self._transpose_multiply(sub_n, sub_m)).pitches
 
 
 class ToneRow(SetRowBase, PCBase):
@@ -291,7 +275,7 @@ class ToneRow(SetRowBase, PCBase):
 
     @property
     def I(self):
-        return self.invert()
+        return self._invert()
 
     @property
     def RI(self):
@@ -357,16 +341,19 @@ class PSetBase(SetRowBase):
         return len(self.pc_set)
 
     def _t_rotations(self):
-        return (PCSet.copy(rot) for rot in self._t_rotations_base())
+        return (PCSet.copy(rot) for rot in [self._transpose(n) \
+                                            for n in self.each_n()])
 
     def _i_rotations(self):
-        return (PCSet.copy(rot) for rot in self._i_rotations_base())
-
+        return (PCSet.copy(rot) for rot in [self._invert(n) \
+                                            for n in self.each_n()])
     def _m_rotations(self):
-        return (PCSet.copy(rot) for rot in self._m_rotations_base())
+        return (PCSet.copy(rot) for rot in [self._transpose_multiply(n) \
+                                            for n in self.each_n()])
 
     def _mi_rotations(self):
-        return (PCSet.copy(rot) for rot in self._mi_rotations_base())
+        return (PCSet.copy(rot) for rot in [self._transpose_multiply(n, self._default_m * -1) \
+                                            for n in self.each_n()])
 
     @property
     def rotation_ints(self):
@@ -392,9 +379,9 @@ class PSetBase(SetRowBase):
         else:
             result.append([setify(self.pcs)])
             if self._canon_i:
-                result.append([setify(self.invert())])
+                result.append([setify(self._invert())])
             if self._canon_m:
-                result.append([setify(self.multiply())])
+                result.append([setify(self._transpose_multiply(0))])
         return result
 
     @property
@@ -422,7 +409,7 @@ class PSetBase(SetRowBase):
 
     @property
     def mpartner(self):
-        return PCSet(self.multiply().prime)
+        return PCSet(self._transpose_multiply().prime)
 
     def forte(self, fname=None):
         if fname:
