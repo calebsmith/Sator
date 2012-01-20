@@ -313,9 +313,13 @@ class PSetBase(SetRowBase):
         return len(self.ppc)
 
     def canon(self, t, i, m):
-        self._canon_t = 1 if t else 0
-        self._canon_i = 1 if i else 0
-        self._canon_m = 1 if m else 0
+        self._canon_t = True if t else False
+        self._canon_i = True if i else False
+        self._canon_m = True if m else False
+
+    @property
+    def get_canon(self):
+        return self._canon_t, self._canon_i, self._canon_m
 
     def setint(self, integer=None):
         if integer:
