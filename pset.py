@@ -337,6 +337,16 @@ class PSetBase(SetRowBase):
     def get_canon(self):
         return self._canon_t, self._canon_i, self._canon_m
 
+    @staticmethod
+    def fromint(integer, modulus=12):
+        new_set = PCSet(mod=modulus)
+        new_set.pitches = utils.fromint(integer)
+        return new_set
+
+    @property
+    def setint(self):
+        return utils.setint(self._unique_pcs)
+
     def setint(self, integer=None):
         if integer:
             self[:] = utils.fromint(integer)

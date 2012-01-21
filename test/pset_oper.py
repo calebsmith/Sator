@@ -147,6 +147,13 @@ class BinIntTest(TestCase):
         self.assertEqual(utils.fromint(18), self.pcset._unique_pcs)
         self.assertEqual(utils.fromint(89), self.pcset2._unique_pcs)
 
+    def testNewFromInt(self):
+        """Using fromint staticmethod to create new PCSets"""
+        a = PCSet.fromint(5)
+        self.assertEqual(a, [0, 2])
+        b = PCSet.fromint(630, 7)
+        self.assertEqual(b, [1, 2, 4, 5, 6])
+
 
 class EachTest(TestCase):
     """Methods that provide each n in the modulus or each set in the modulus"""
