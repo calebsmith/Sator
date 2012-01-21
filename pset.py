@@ -293,6 +293,15 @@ class SetRowBase():
         return [self.copy(rot) for rot in [self._transpose_multiply(n, self._default_m * -1) \
                                            for n in self.each_n()]]
 
+    @property
+    def all_rotations(self):
+        result = []
+        result.extend(self.t_rotations)
+        result.extend(self.i_rotations)
+        result.extend(self.m_rotations)
+        result.extend(self.mi_rotations)
+        return result
+
 
 class PCBase():
     """Base class for Tone rows and PC sets"""
@@ -541,15 +550,6 @@ class PSetBase(SetRowBase):
         """
         return (PCSet.copy(rot) for rot in [self._transpose_multiply(n, self._default_m * -1) \
                                             for n in self.each_n()])
-
-    @property
-    def all_rotations(self):
-        result = []
-        result.extend(self._t_rotations())
-        result.extend(self._i_rotations())
-        result.extend(self._m_rotations())
-        result.extend(self._mi_rotations())
-        return result
 
     @property
     def _rotation_ints(self):
