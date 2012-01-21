@@ -295,6 +295,9 @@ class SetRowBase():
 
     @property
     def all_rotations(self):
+        """
+        Return a flat list of objects for each possible TTO of the given object
+        """
         result = []
         result.extend(self.t_rotations)
         result.extend(self.i_rotations)
@@ -524,39 +527,47 @@ class PSetBase(SetRowBase):
         Same as the public method, but enforces that the returned objects are
         PCSets for use with the prime method.
         """
-        return (PCSet.copy(rot) for rot in [self._transpose(n) \
-                                            for n in self.each_n()])
+        return (PCSet(self.copy(rot)) for rot in [self._transpose(n) \
+                                                  for n in self.each_n()])
 
     def _i_rotations(self):
         """
         Same as the public method, but enforces that the returned objects are
         PCSets for use with the prime method.
         """
-        return (PCSet.copy(rot) for rot in [self._invert(n) \
-                                            for n in self.each_n()])
+        return (PCSet(self.copy(rot)) for rot in [self._invert(n) \
+                                                  for n in self.each_n()])
 
     def _m_rotations(self):
         """
         Same as the public method, but enforces that the returned objects are
         PCSets for use with the prime method.
         """
-        return (PCSet.copy(rot) for rot in [self._transpose_multiply(n) \
-                                            for n in self.each_n()])
+        return (PCSet(self.copy(rot)) for rot in [self._transpose_multiply(n) \
+                                                  for n in self.each_n()])
 
     def _mi_rotations(self):
         """
         Same as the public method, but enforces that the returned objects are
         PCSets for use with the prime method.
         """
-        return (PCSet.copy(rot) for rot in [self._transpose_multiply(n, self._default_m * -1) \
-                                            for n in self.each_n()])
+        return (PCSet(self.copy(rot)) for rot in [self._transpose_multiply(n, self._default_m * -1) \
+                                                  for n in self.each_n()])
 
     @property
     def _rotation_ints(self):
+        """
+        Returns a nested list with the interger representation for each object
+        returned from _rotations()
+        """
         return [[utils.setint(pcs) for pcs in rotation] \
             for rotation in self._rotations()]
 
     def _rotations(self):
+        """
+        Returns a nested list of PCSet objects for each canonical TTO for a
+        given object.
+        """
         def setify(pitches):
             pcs = [pitch % self._mod for pitch in pitches]
             result = list(set(pitches))
@@ -583,7 +594,8 @@ class PSetBase(SetRowBase):
     @property
     def prime_operation(self):
         """
-        The (n, m) pair to perform on this set in order to obtain the prime
+        The (n, m) pair to perform on the given object in order to obtain its
+        prime.
         """
         low_vals =[min(izip(operation, count())) \
             for operation in self._rotation_ints]
@@ -602,15 +614,28 @@ class PSetBase(SetRowBase):
 
     @property
     def prime(self):
+        """
+        Return a PCSet that represents the given object in prime form, taking
+        into account its canonical TTO's (set these with .canon(T, I, M)).
+        """
         n, m = self.prime_operation
         return PCSet(self.copy(transpose_multiply(self.pitches, n, m)))
 
     @property
     def mpartner(self):
+        """
+        Return a PCSet for the M-partner of the given object.
+        """
         return PCSet(self._transpose_multiply().prime)
 
     @staticmethod
     def forte_name(fname):
+        """
+        A static method that returns a PCSet object with the fort-name provided
+        as a string argument.
+        Returns an empty PCSet if the argument is not a string with a valid
+        Forte name.
+        """
         fset = utils.from_forte(fname)
         new_set = PCSet()
         if fset:
@@ -619,6 +644,9 @@ class PSetBase(SetRowBase):
 
     @property
     def forte(self):
+        """
+        Returns the Forte name for the given object.
+        """
         return utils.forte_name(self.pcint)
 
     @property
