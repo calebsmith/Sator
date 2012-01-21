@@ -17,7 +17,7 @@ class InitTests(TestCase):
         a = PSet(0, 9)
         b = PCSet(self.l2)        
         self.assertEqual(a, [0, 9])
-        self.assertEqual(b.unique_pcs, [0, 1, 2])
+        self.assertEqual(b._unique_pcs, [0, 1, 2])
 
     def testInitSet(self):
         s1 = set(['4', 5, '0'])
@@ -25,17 +25,17 @@ class InitTests(TestCase):
         a = PSet(s1)
         b = PCSet(s2)
         c = PCSet(s1, s2)
-        self.assertEqual(a.unique_pcs, [0, 4, 5])
-        self.assertEqual(b.unique_pcs, [0, 3, 9])
-        self.assertEqual(c.unique_pcs, [0, 3, 4, 5, 9])
+        self.assertEqual(a._unique_pcs, [0, 4, 5])
+        self.assertEqual(b._unique_pcs, [0, 3, 9])
+        self.assertEqual(c._unique_pcs, [0, 3, 4, 5, 9])
 
     def testInitList(self):
         a = PSet(self.l)
         b = PCSet(self.l2)
         c = PSet(self.l, self.l2)
-        self.assertEqual(a.unique_pcs, [0, 3, 9])
-        self.assertEqual(b.unique_pcs, [0, 1, 2])
-        self.assertEqual(c.unique_pcs, [0, 1, 2, 3, 9])
+        self.assertEqual(a._unique_pcs, [0, 3, 9])
+        self.assertEqual(b._unique_pcs, [0, 1, 2])
+        self.assertEqual(c._unique_pcs, [0, 1, 2, 3, 9])
     
     def testInitTuple(self):
         a = PSet((0, 1))
@@ -47,9 +47,9 @@ class InitTests(TestCase):
         c = PCSet(a)
         d = PCSet(b)
         e = PCSet(c, d)
-        self.assertEqual(c.unique_pcs, [0, 3, 9])
-        self.assertEqual(d.unique_pcs, [0, 1, 2])
-        self.assertEqual(e.unique_pcs, [0, 1, 2, 3, 9])
+        self.assertEqual(c._unique_pcs, [0, 3, 9])
+        self.assertEqual(d._unique_pcs, [0, 1, 2])
+        self.assertEqual(e._unique_pcs, [0, 1, 2, 3, 9])
 
     def testInitPSet(self):
         a = PSet([0, 15, 6])
@@ -104,27 +104,27 @@ class SubTests(TestCase):
 
     def testsubInt(self):
         a = PCSet(self.l) - 2
-        self.assertEqual(a.unique_pcs, [0, 1, 3, 4, 5, 6])
+        self.assertEqual(a._unique_pcs, [0, 1, 3, 4, 5, 6])
 
     def testsubList(self):
         a = PCSet(self.l) - [0, 1, 2]
-        self.assertEqual(a.unique_pcs, [3, 4, 5, 6])
+        self.assertEqual(a._unique_pcs, [3, 4, 5, 6])
 
     def testsubTuple(self):
         a = PCSet(self.l) - (0, 1, 2, 3, 4)
-        self.assertEqual(a.unique_pcs, [5, 6])
+        self.assertEqual(a._unique_pcs, [5, 6])
 
     def testsubSet(self):
         a = PCSet(self.l) - set([4, 5, 6])  
-        self.assertEqual(a.unique_pcs, [0, 1, 2, 3])
+        self.assertEqual(a._unique_pcs, [0, 1, 2, 3])
 
     def testsubPSet(self):
         a = PCSet(self.l) - PSet(0, 1, 5, 6)
-        self.assertEqual(a.unique_pcs, [2, 3, 4])
+        self.assertEqual(a._unique_pcs, [2, 3, 4])
 
     def testsubPCSet(self):
         a = PCSet(self.l) - PCSet(0, 1, 2, 3)
-        self.assertEqual(a.unique_pcs, [4, 5, 6])
+        self.assertEqual(a._unique_pcs, [4, 5, 6])
 
 
 class EqualityTest(TestCase):
@@ -204,7 +204,10 @@ class GetItemTest(TestCase):
         self.assertEqual(self.pcset[-1], [11])
 
     def testgetAfter(self):
-        self.assertEqual(self.pcset[100], None)
+        try:
+            self.pcset[100]
+        except IndexError:
+            assert True
 
 
 class SequenceTest(TestCase):

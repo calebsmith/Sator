@@ -7,7 +7,7 @@ import utils
 
 """Test pc and set methods"""
 class PCSetifyTests(TestCase):
-    """Test pcs, pc_sets, _setify, unique_pcs and related methods"""
+    """Test pcs, _pc_sets, _setify, _unique_pcs and related methods"""
 
     def setUp(self):        
         self.pcset = PCSet(22, 3, 5, -7, 0, 10)
@@ -17,19 +17,19 @@ class PCSetifyTests(TestCase):
         self.assertEqual(self.pcset.pcs, pcs)
 
     def testPc_set(self):
-        self.assertEqual(self.pcset.pc_set, set([0, 3, 5, 10]))
+        self.assertEqual(self.pcset._pc_set, set([0, 3, 5, 10]))
 
     def testCardinality(self):
         self.assertEqual(self.pcset.cardinality, 4)
 
     def testPitch_set(self):
-        self.assertEqual(self.pcset.pitch_set, set([22, 3, 5, -7, 0, 10]))
+        self.assertEqual(self.pcset._pitch_set, set([22, 3, 5, -7, 0, 10]))
 
     def testUo_pcs(self):
         self.assertEqual(self.pcset.uo_pcs, [0, 3, 5, 5, 10, 10])
 
     def testUnique_pcs(self):
-        self.assertEqual(self.pcset.unique_pcs, [0, 3, 5, 10])
+        self.assertEqual(self.pcset._unique_pcs, [0, 3, 5, 10])
 
 
 """Test Tn TnI TnMm operations"""
@@ -105,8 +105,8 @@ class TnTmInPlace(TestCase):
         b = self.b
         a.m()
         b.m(3)
-        self.assertEqual(a.unique_pcs, [0, 4, 8, 9, 10])
-        self.assertEqual(b.unique_pcs, [0, 1, 3, 7, 11])
+        self.assertEqual(a._unique_pcs, [0, 4, 8, 9, 10])
+        self.assertEqual(b._unique_pcs, [0, 1, 3, 7, 11])
 
     def testMi(self):
         a = self.a
@@ -116,9 +116,9 @@ class TnTmInPlace(TestCase):
         b.m()
         b.i()
         c.mi(5)
-        self.assertEqual(a.unique_pcs, [0, 2, 3, 4, 8])
+        self.assertEqual(a._unique_pcs, [0, 2, 3, 4, 8])
         self.assertEqual(a, b)
-        self.assertEqual(c.unique_pcs, [1, 5, 7, 8, 9])
+        self.assertEqual(c._unique_pcs, [1, 5, 7, 8, 9])
 
     def testTm(self):
         a = self.a
@@ -127,9 +127,9 @@ class TnTmInPlace(TestCase):
         a.t_m(0, 1)
         b.t_m(1, 5)
         c.t_m(5, -1)
-        self.assertEqual(a.unique_pcs, [0, 2, 4, 8, 9])
-        self.assertEqual(b.unique_pcs, [1, 5, 9, 10, 11])
-        self.assertEqual(c.unique_pcs, [1, 3, 5, 8, 9])
+        self.assertEqual(a._unique_pcs, [0, 2, 4, 8, 9])
+        self.assertEqual(b._unique_pcs, [1, 5, 9, 10, 11])
+        self.assertEqual(c._unique_pcs, [1, 3, 5, 8, 9])
 
 
 class BinIntTest(TestCase):
@@ -143,14 +143,9 @@ class BinIntTest(TestCase):
         self.assertEqual(self.pcset.setint(), 18)
         self.assertEqual(self.pcset2.setint(), 89)
 
-    def testMaxDigit(self):
-        self.assertEqual(utils._max_digit(4095), 12)
-        self.assertEqual(utils._max_digit(0), 1)
-        self.assertEqual(utils._max_digit(25), 5)
-
     def testFromInt(self):
-        self.assertEqual(utils.fromint(18), self.pcset.unique_pcs)
-        self.assertEqual(utils.fromint(89), self.pcset2.unique_pcs)
+        self.assertEqual(utils.fromint(18), self.pcset._unique_pcs)
+        self.assertEqual(utils.fromint(89), self.pcset2._unique_pcs)
 
 
 class EachTest(TestCase):

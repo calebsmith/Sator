@@ -21,7 +21,7 @@ class PrimeAndRotationsTest(PrimeTestCase):
     """Methods that generate lists of PCSets after TnTm operations"""
 
     def make_rotations(self):
-        """Helper for checking .rotations and .rotation_ints"""
+        """Helper for checking ._rotations and ._rotation_ints"""
         self.t_only = [[self.pcset.uo_pcs]]
         self.m_only = self.t_only + [[self.pcset._transpose_multiply().uo_pcs]]
         self.i_only = self.t_only + [[self.pcset._invert().uo_pcs]]
@@ -49,7 +49,7 @@ class PrimeAndRotationsTest(PrimeTestCase):
     def make_prime_operation(self):
         """Helper for listing operations that make rotation_ints"""
         tto_ints = []
-        for index_m, operation in enumerate(self.pcset.rotation_ints):
+        for index_m, operation in enumerate(self.pcset._rotation_ints):
             for index_t, num in enumerate(operation):
                 tto_ints.append((num, index_t, index_m))
         tto_ints.sort()
@@ -122,7 +122,7 @@ class PrimeAndRotationsTest(PrimeTestCase):
         for t, i, m in self.make_canons():
             self.pcset.canon(t, i, m)
             self.assertEqual(self.make_rotation_ints(),
-                             self.pcset.rotation_ints)
+                             self.pcset._rotation_ints)
 
     def testPrimeOperation(self):
         self.pcset.clear()
@@ -186,22 +186,22 @@ class PrimeReliantTests(PrimeTestCase):
 
     def testForteName(self):
         for each in self.sets:
-            self.assertTrue(each.forte() != None)
+            self.assertTrue(each.forte != None)
 
     def testForteInt(self):
         for each in self.sets:
             self.assertEqual(each.pcint,
-                             utils.setint(utils.from_forte(each.forte())))
+                             utils.setint(utils.from_forte(each.forte)))
 
     def testForteSet(self):
         a = PCSet()
-        fnames = [each.forte() for each in self.sets]
+        fnames = [each.forte for each in self.sets]
         new_sets = []
         for fname in fnames:
             a.clear()
-            a.forte(fname)
+            a = PCSet.forte_name(fname)
             new_sets.append(a.copy())
-        new_fnames = [each.forte() for each in new_sets]
+        new_fnames = [each.forte for each in new_sets]
         self.assertEqual(fnames, new_fnames)
 
     def testMPartner(self):
@@ -253,7 +253,7 @@ class PrimeReliantTests(PrimeTestCase):
     def testEachPrime(self):
         a = PCSet()
         for prime in a.each_prime():
-            self.assertEqual(prime.prime, prime.unique_pcs)
+            self.assertEqual(prime.prime, prime._unique_pcs)
 
 class SubsetsTest(TestCase):
 

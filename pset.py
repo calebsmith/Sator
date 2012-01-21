@@ -87,8 +87,6 @@ class SetRowBase():
         except TypeError:
             l = [self.ppc[key]]
             return self.copy(l)
-        except IndexError:
-            return None
 
     def __setitem__(self, key, value):
         self.pitches[key] = value
@@ -110,40 +108,40 @@ class SetRowBase():
         new._default_m = self._default_m
         return new
 
-    def insert(self, place, pitch):
-        try:
-            pitches = self.pitches[:place]
-            pitches.append(pitch)
-            pitches.extend(self.pitches[place:])
-            self[:] = pitches
-        except IndexError:
-            self.pitches.append(pitch)
+    def mod(self, new_mod=None):
+        if new_mod:
+            self._mod = new_mod
+        else:
+            return self._mod
 
-    def clear(self):
-        self[:] = []
+    def default_m(self, new_m=None):
+        if new_m:
+            self._default_m = new_m
+        else:
+            return self._default_m
 
-    def mod(self, new_mod):
-        self._mod = new_mod
+    def multiset(self, value=None):
+        if value is not None:        
+            self._multiset = True if value else False
+        else:
+            return self._multiset
 
-    def default_m(self, new_m):
-        self._default_m = new_m
-
-    def multiset(self, value):
-        self._multiset = True if value else False
-
-    def ordered(self, value):
-        self._ordered = True if value else False
+    def ordered(self, value=None):
+        if value is not None:
+            self._ordered = True if value else False
+        else:
+            return self._ordered
 
     @property
     def pcs(self):
         return [pitch % self._mod for pitch in self.pitches]
 
     @property
-    def pc_set(self):
+    def _pc_set(self):
         return set(self.pcs)
 
     @property
-    def pitch_set(self):
+    def _pitch_set(self):
         return set(self.pitches)
 
     @property
@@ -153,8 +151,8 @@ class SetRowBase():
         return output
 
     @property
-    def unique_pcs(self):
-        output = list(self.pc_set)
+    def _unique_pcs(self):
+        output = list(self._pc_set)
         output.sort()
         return output
 
@@ -230,21 +228,6 @@ class SetRowBase():
     def mi_rotations(self):
         return [self.copy(rot) for rot in [self._transpose_multiply(n, self._default_m * -1) \
                                            for n in self.each_n()]]
-    @property
-    def all_rotations(self):
-        result = []
-        result.extend(self._t_rotations())
-        result.extend(self._i_rotations())
-        result.extend(self._m_rotations())
-        result.extend(self._mi_rotations())
-        return result
-
-    @property
-    def literal_compliment(self):
-        return self.copy([n for n in self.each_n() if n not in self.pcs])
-
-    def c(self):
-        self[:] = self.literal_compliment.pitches
 
 
 class PCBase():
@@ -277,6 +260,11 @@ class ToneRow(SetRowBase, PCBase):
                   'pitches or pcs equal to their modulus'
             raise self.IncompleteException(msg)
 
+    def swap(self, a, b):
+        c = self.pitches[a]
+        self.pitches[a] = self.pitches[b]
+        self.pitches[b] = c
+
     @property
     def P(self):
         return self
@@ -295,6 +283,22 @@ class ToneRow(SetRowBase, PCBase):
     def RI(self):
         return self.R.I
 
+    @property
+    def M(self):
+        return self._transpose_multiply()
+
+    @property
+    def MI(self):
+        return self._transpose_multiply(0, self._mod - self._default_m)
+
+    @property
+    def RM(self):
+        return self.R.M
+
+    @property
+    def RMI(self):
+        return self.R.MI
+
     def ordered(self, order):
         self._ordered = True
 
@@ -312,6 +316,18 @@ class PSetBase(SetRowBase):
     def __len__(self):
         return len(self.ppc)
 
+    def insert(self, place, pitch):
+        try:
+            pitches = self.pitches[:place]
+            pitches.append(pitch)
+            pitches.extend(self.pitches[place:])
+            self[:] = pitches
+        except IndexError:
+            self.pitches.append(pitch)
+
+    def clear(self):
+        self[:] = []
+
     def canon(self, t, i, m):
         self._canon_t = True if t else False
         self._canon_i = True if i else False
@@ -325,7 +341,7 @@ class PSetBase(SetRowBase):
         if integer:
             self[:] = utils.fromint(integer)
         else:
-            return utils.setint(self.unique_pcs)
+            return utils.setint(self._unique_pcs)
 
     @property
     def pcint(self):
@@ -343,8 +359,9 @@ class PSetBase(SetRowBase):
 
     @property
     def cardinality(self):
-        return len(self.pc_set)
+        return len(self._pc_set)
 
+    # Helper functions for prime()
     def _t_rotations(self):
         return (PCSet.copy(rot) for rot in [self._transpose(n) \
                                             for n in self.each_n()])
@@ -361,7 +378,16 @@ class PSetBase(SetRowBase):
                                             for n in self.each_n()])
 
     @property
-    def rotation_ints(self):
+    def all_rotations(self):
+        result = []
+        result.extend(self._t_rotations())
+        result.extend(self._i_rotations())
+        result.extend(self._m_rotations())
+        result.extend(self._mi_rotations())
+        return result
+
+    @property
+    def _rotation_ints(self):
         return [[utils.setint(pcs) for pcs in rotation] \
             for rotation in self._rotations()]
 
@@ -395,7 +421,7 @@ class PSetBase(SetRowBase):
         The (n, m) pair to perform on this set in order to obtain the prime
         """
         low_vals =[min(izip(operation, count())) \
-            for operation in self.rotation_ints]
+            for operation in self._rotation_ints]
         min_val = min(izip(low_vals, count()))
         n = min_val[0][1]
         oper = min_val[1]
@@ -418,17 +444,21 @@ class PSetBase(SetRowBase):
     def mpartner(self):
         return PCSet(self._transpose_multiply().prime)
 
-    def forte(self, fname=None):
-        if fname:
-            fset = utils.from_forte(fname)
-            if fset:
-                self[:] = fset
-        else:
-            return utils.forte_name(self.pcint)
+    @staticmethod
+    def forte_name(fname):
+        fset = utils.from_forte(fname)
+        new_set = PCSet()
+        if fset:
+            new_set.pitches = fset
+        return new_set
+
+    @property
+    def forte(self):
+        return utils.forte_name(self.pcint)
 
     @property
     def icv(self):
-        return utils.icv(self.unique_pcs, self._mod)
+        return utils.icv(self._unique_pcs, self._mod)
 
     @property
     def zpartner(self):
@@ -441,8 +471,8 @@ class PSetBase(SetRowBase):
             else:
                 return
         for each in self.each_card():
-            p = each.prime.unique_pcs
-            if each.icv == self.icv and p != self.prime.unique_pcs:
+            p = each.prime._unique_pcs
+            if each.icv == self.icv and p != self.prime._unique_pcs:
                 return self.copy(p)
 
     def supersets(self, limit=0):
@@ -461,10 +491,17 @@ class PSetBase(SetRowBase):
         for sub in self.subsets(limit):
             yield PCSet(self.copy(utils.fromint(sub.pcint)))
 
+    @property
+    def literal_compliment(self):
+        return self.copy([n for n in self.each_n() if n not in self.pcs])
+
+    def c(self):
+        self[:] = self.literal_compliment.pitches
+
 
 class PCSet(PSetBase, PCBase):
     """
-    A pitch class set which adds pitch class only methos
+    A pitch class set which adds pitch class only methods
     """
 
     def __sub__(self, other):

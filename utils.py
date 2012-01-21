@@ -6,13 +6,9 @@ def setint(pcs):
     """Find the integer representation of an unordered PC set"""
     return sum([2 ** pc for pc in pcs])
 
-def _max_digit(integer):
-    """Find the highest binary digit given an integer"""
-    return len(bin(integer)) - 2
-
 def fromint(integer):
         result = []
-        limit = _max_digit(integer)
+        limit = len(bin(integer)) - 2
         each_digit = [2 ** n for n in xrange(limit, -1, -1)]
         for index, digit in enumerate(each_digit):
             if integer >= digit:
