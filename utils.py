@@ -55,6 +55,7 @@ def _subs_n_minus_1(pcs):
 def supersets(pcs, mod, limit=0):
     if not limit:
         limit = mod
+    # FIXME: Raise a useful exception rather than just yielding None
     if limit <= len(pcs):
         yield
     else:
@@ -66,6 +67,7 @@ def supersets(pcs, mod, limit=0):
                     yield pcs
 
 def subsets(pcs, limit=0):
+    # FIXME: Raise a useful exception rather than just yielding None
     if limit >= len(pcs):
         yield
     else:

@@ -684,18 +684,36 @@ class PPCSetBase(SetRowBase):
                 return self.copy(p)
 
     def supersets(self, limit=0):
+        """
+        Yields the supersets of the given object. Takes an optional argument,
+        which limits the supersets to those with a cardinality <= the limit.
+        With no argument, returns all supersets.
+        """
         for sup in utils.supersets(self.ppc, self._mod, limit):
             yield self.copy(sup)
 
     def superprimes(self, limit=0):
+        """
+        Yields the supersets of the given object which have a unique set-class.
+        Takes an optional limit argument with the same behavior as supersets()
+        """
         for sup in self.supersets(limit):
             yield PCSet(self.copy(utils.fromint(sup.pcint)))
 
     def subsets(self, limit=0):
+        """
+        Yields the subsets of the given object. Takes an optional argument,
+        which limits the subsets to those with a cardinality >= the limit.
+        With no argument, returns all subsets.
+        """
         for sub in utils.subsets(self.ppc, limit):
             yield self.copy(sub)
 
     def subprimes(self, limit=0):
+        """
+        Yields the subsets of the given object which have a unique set-class.
+        Takes an optional limit argument with the same behavior as subsets().
+        """
         for sub in self.subsets(limit):
             yield PCSet(self.copy(utils.fromint(sub.pcint)))
 
