@@ -650,11 +650,26 @@ class PSetBase(SetRowBase):
         return utils.forte_name(self.pcint)
 
     @property
+    def literal_compliment(self):
+        """Returns a PCSet of the literal compliment of the given object."""
+        return PCSet(self.copy([n for n in self.each_n() if n not in self.pcs]))
+
+    @property
+    def abstract_compliment(self):
+        """Returns a PCSet of the abstract compliment of the given object."""
+        return PCSet(self.literal_compliment.prime)
+
+    @property
     def icv(self):
+        """Returns the interval class vector of the given object."""
         return utils.icv(self._unique_pcs, self._mod)
 
     @property
     def zpartner(self):
+        """
+        Returns the Z-partner of the given object if it exists, otherwise
+        return None.
+        """
         if self._mod > 12:
             return None
         if self._mod == 12:
@@ -684,17 +699,10 @@ class PSetBase(SetRowBase):
         for sub in self.subsets(limit):
             yield PCSet(self.copy(utils.fromint(sub.pcint)))
 
-    @property
-    def literal_compliment(self):
-        return self.copy([n for n in self.each_n() if n not in self.pcs])
-
-    def c(self):
-        self[:] = self.literal_compliment.pitches
-
 
 class PCSet(PSetBase, PCBase):
     """
-    A pitch class set which adds pitch class only methods
+    A Class for pitch class sets which adds pitch class only methods
     """
 
     def __sub__(self, other):
@@ -712,23 +720,21 @@ class PCSet(PSetBase, PCBase):
         while pc in self.pitches:
             self.pitches.remove(pc)
 
+    def c(self):
+        """Change the given object in place to its literal compliment."""
+        self[:] = self.literal_compliment.pitches
+
     def z(self):
+        """
+        Change the given object in place to its Z-partner if possible.
+        Otherwise leave the object unchanged.        
+        """
         other = self.zpartner
         if other:
             self.pitches = other.pitches
 
-    @property
-    def abstract_compliment(self):
-        return self.literal_compliment.prime
-
 
 class PSet(PSetBase):
-    """A pitch set, which adds pitch set only methods."""
-
+    """A class for pitch sets, which adds pitch set only methods."""
     _ordered = True
-
-    def remove(self, key):
-        try:
-            self[:] = self[:key] + self[key + 1:]
-        except IndexError:
-            pass
+    pass
