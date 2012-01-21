@@ -54,8 +54,10 @@ class SetRowBase():
             self.pitches = self._rm_dupes(self.pitches)
         return self
 
+    #TODO: add a __radd__ ?
+
     def __eq__(self, other):
-        """Compare equality between a PSet/PCSet and another object"""
+        """Compare equality between a ToneRow/PSet/PCSet and another object"""
 
         #Are we comparing pitches as ordered lists or set membership?
         if not self._ordered and isinstance(other, (tuple, list)):
@@ -99,6 +101,7 @@ class SetRowBase():
         return str(self.ppc)
 
     def copy(self, pitches=None):
+        """Use to copy a ToneRow/PSet/PCSet with all data attributes."""
         if pitches is None:
             pitches = self.pitches
         new = self.__class__(pitches, mod=self._mod, ordered=self._ordered,
@@ -109,24 +112,43 @@ class SetRowBase():
         return new
 
     def mod(self, new_mod=None):
+        """
+        Takes one argument as the new modulus of the system.
+        Without an argument, returns the current modulus.
+        """
         if new_mod:
             self._mod = new_mod
         else:
             return self._mod
 
     def default_m(self, new_m=None):
+        """
+        Takes one argument as the new default argument for M operations.
+        (The default for Mod 12 is 5)
+        Without an argument, returns the current default m.
+        """
         if new_m:
             self._default_m = new_m
         else:
             return self._default_m
 
     def multiset(self, value=None):
+        """
+        Takes one boolean argument and determines if the object is a multiset.
+        (The default for all objects is False. ToneRows cannot be multisets)
+        Without an argument, returns the current setting.
+        """
         if value is not None:        
             self._multiset = True if value else False
         else:
             return self._multiset
 
     def ordered(self, value=None):
+        """
+        Takes one boolean argument and determines if the object is ordered.
+        (The default for PCSets is False. The default for PSets is True.)
+        Without an argument, returns the current setting.
+        """
         if value is not None:
             self._ordered = True if value else False
         else:
@@ -134,36 +156,51 @@ class SetRowBase():
 
     @property
     def pcs(self):
+        """Returns the pitch classes of the current set/row"""
         return [pitch % self._mod for pitch in self.pitches]
 
     @property
     def _pc_set(self):
+        """Returns pitch classes as a Python set for internal use"""
         return set(self.pcs)
 
     @property
     def _pitch_set(self):
+        """Returns pitches as a Python set for internal use"""
         return set(self.pitches)
 
     @property
     def uo_pcs(self):
+        """Returns unordered pitch classes in ascending order"""
         output = self.pcs[:]
         output.sort()
         return output
 
     @property
     def _unique_pcs(self):
+        """
+        Returns the unique, unordered pitch classes in ascending order. These
+        are guarnteed to be unique regardless of rather or not the object is a
+        multiset.
+        """
         output = list(self._pc_set)
         output.sort()
         return output
 
     @property
     def uo_pitches(self):
+        """Returns the unordered pitches in ascending order"""
         output = self.pitches[:]
         output.sort()
         return output
 
     @property
     def ppc(self):
+        """
+        Returns the pitches or pcs of a ToneRow, PCSet, or PSet taking into
+        account the ordered and multiset settings. Given an objects settings,
+        this is the representation that we expect.
+        """
         #Ordered?
         if self._ordered:
             pitches = self.pitches
@@ -182,11 +219,17 @@ class SetRowBase():
         return ppc
 
     def _rm_dupes(self, ps):
+        """Remove all duplicates of a given pitch or pitch class from a list"""
         new = []
         [new.insert(ps.index(num), num) for num in ps[:] if num not in new]
         return new
 
     def each_n(self):
+        """
+        Yields a number for each possible member in the object considering its
+        modulus.
+        (An object with a modulus of 12 would return [0, 1, 2...11])
+        """
         for num in xrange(0, self._mod):
             yield num
 
@@ -204,28 +247,49 @@ class SetRowBase():
         return self.copy(result)
 
     def t(self, sub_n):
+        """Transpose the object in place by the argument provided."""
         self[:] = (self._transpose(sub_n)).pitches
 
     def i(self, sub_n=0):
+        """
+        Invert the object in place. If an argument is provided, also transpose
+        the object in place by that amount.
+        """
         self[:] = (self._invert(sub_n)).pitches
 
     @property
     def t_rotations(self):
+        """
+        Returns a list of objects for each possible transposition of the given
+        object.
+        """
         return [self.copy(rot) for rot in [self._transpose(n) \
                                            for n in self.each_n()]]
 
     @property
     def i_rotations(self):
+        """
+        Returns a list of objects for each possible transposition of the given
+        object after inversion.
+        """
         return [self.copy(rot) for rot in [self._invert(n) \
                                            for n in self.each_n()]]
 
     @property
     def m_rotations(self):
+        """
+        Returns a list of objects for each possible transposition of the given
+        object after M.
+        """
         return [self.copy(rot) for rot in [self._transpose_multiply(n) \
                                            for n in self.each_n()]]
 
     @property
     def mi_rotations(self):
+        """
+        Returns a list of objects for each possible transposition of the given
+        object after MI.
+        """
         return [self.copy(rot) for rot in [self._transpose_multiply(n, self._default_m * -1) \
                                            for n in self.each_n()]]
 
@@ -234,13 +298,26 @@ class PCBase():
     """Base class for Tone rows and PC sets"""
 
     def m(self, sub_n=0):
+        """
+        Perform M on the object in place. If an argument is provided, also
+        transpose the object in place by that amount.
+        """
         self[:] = (self._transpose_multiply(sub_n, self._default_m)).pitches
 
     def mi(self, sub_n=0):
+        """
+        Perform M and I on the object in place. If an argument is provided,
+        also transpose the object in play by that amount.
+        """
         sub_m = self._mod - self._default_m
         self[:] = (self._transpose_multiply(sub_n, sub_m)).pitches
         
     def t_m(self, sub_n=0, sub_m=0):
+        """
+        Perform TnMm on the object in place, where n and m are positional
+        arguments. If n is not provided, it defaults to 0. If m is not provided
+        it defaults to the default_m of the object.
+        """
         if not sub_m:
             sub_m = self._default_m
         self[:] = (self._transpose_multiply(sub_n, sub_m)).pitches
@@ -261,48 +338,66 @@ class ToneRow(SetRowBase, PCBase):
             raise self.IncompleteException(msg)
 
     def swap(self, a, b):
+        """
+        Given two arguments, swap the PC's in the ToneRow that are at these
+        positions. 
+        """
         c = self.pitches[a]
         self.pitches[a] = self.pitches[b]
         self.pitches[b] = c
 
     @property
     def P(self):
+        """Returns the prime of the ToneRow"""
         return self
 
     @property
     def R(self):
+        """Returns the retrograde of the ToneRow"""
         ppc = self.ppc
         ppc.reverse()
         return self.copy(ppc)
 
     @property
     def I(self):
+        """Returns the inversion of the ToneRow"""
         return self._invert()
 
     @property
     def RI(self):
+        """Returns the retrograde inversion of the ToneRow"""
         return self.R.I
 
     @property
     def M(self):
+        """
+        Returns the Mm of the ToneRow, where m = the default_m of the ToneRow
+        """
         return self._transpose_multiply()
 
     @property
     def MI(self):
+        """
+        Returns the MmI of the ToneRow, where m = the default_m of the ToneRow
+        """
         return self._transpose_multiply(0, self._mod - self._default_m)
 
     @property
     def RM(self):
+        """Returns the retrograde of the M of the ToneRow."""
         return self.R.M
 
     @property
     def RMI(self):
+        """Returns the retrograde of the MI of the ToneRow."""
         return self.R.MI
 
     def ordered(self, order):
+        """Overridden so that ToneRows are always ordered."""
         self._ordered = True
 
     def multiset(self, multi):
+        """Overridden so that ToneRows are never multisets."""
         self._multiset = False
 
 
@@ -317,6 +412,12 @@ class PSetBase(SetRowBase):
         return len(self.ppc)
 
     def insert(self, place, pitch):
+        """
+        Given arguments (place, pitch) insert the pitch at the place position.
+        Take care to inspect the object's pitches attribute rather than it's
+        __repr__, which uses the ppc attribute and may truncate duplicates.
+        If the position is too great, the pitch will be appended at the end.
+        """
         try:
             pitches = self.pitches[:place]
             pitches.append(pitch)
@@ -326,64 +427,118 @@ class PSetBase(SetRowBase):
             self.pitches.append(pitch)
 
     def clear(self):
+        """Remove all pitches/pitch classes from the object."""
         self[:] = []
 
     def canon(self, t, i, m):
+        """
+        Takes arguments in the form of (T, I, M) where each is a boolean.
+        These arguments determine which TTO's are canonical. These TTO's are
+        used to determine an object's set-class.
+        (The default canonical operators are T and I, hence the common name
+        Tn/TnI type).
+        Ex:
+            a.canon(True, False, False)
+
+            a.prime would now give the Tn-type, and ignore inversion as an
+            operation for determining set-class membership.
+        """
         self._canon_t = True if t else False
         self._canon_i = True if i else False
         self._canon_m = True if m else False
 
     @property
     def get_canon(self):
-        return self._canon_t, self._canon_i, self._canon_m
+        """
+        Returns a three tuple showing which TTO's are canonical for the given
+        object. These are in the order (T, I, M). Refer to canon() for details
+        on how these settings are used.
+        """
+        return (self._canon_t, self._canon_i, self._canon_m)
 
     @staticmethod
     def fromint(integer, modulus=12):
+        """
+        Static method that returns a PCSet object with pc's generated from
+        their integer representation.
+            Ex:
+                0 = [], 1 = [0], 2 = [1], 3 = [0, 1], 4 = [2], 5 = [0, 2]
+                PCSet.fromint(5) returns PCSet([0, 2])
+        """
         new_set = PCSet(mod=modulus)
         new_set.pitches = utils.fromint(integer)
         return new_set
 
     @property
     def setint(self):
+        """
+        Returns the integer representation for the unique PC's in a given
+        object
+        """
         return utils.setint(self._unique_pcs)
-
-    def setint(self, integer=None):
-        if integer:
-            self[:] = utils.fromint(integer)
-        else:
-            return utils.setint(self._unique_pcs)
 
     @property
     def pcint(self):
+        """
+        Returns the integer representation of a given object in prime form.
+        """
         return utils.setint(self.prime)
 
     def each_card(self):
+        """
+        Yields every set with the same cardinality as the given object, taking
+        into account the object's modulus.
+        """
         return combinations(self.each_n(), self.cardinality)
 
     def each_set(self):
+        """
+        Yields every possible set in the modulus of the given object.
+        """
         return (self.copy(utils.fromint(integer)) \
                 for integer in xrange(0, 2 ** self._mod))
 
     def each_prime(self):
+        """
+        Yields each unique set-class in the modulus of the given object.
+        """
         return (each for each in self.each_set() if each.prime == each)
 
     @property
     def cardinality(self):
+        """Returns the cardinality of the given object."""
         return len(self._pc_set)
 
     # Helper functions for prime()
     def _t_rotations(self):
+        """
+        Same as the public method, but enforces that the returned objects are
+        PCSets for use with the prime method.
+        """
         return (PCSet.copy(rot) for rot in [self._transpose(n) \
                                             for n in self.each_n()])
 
     def _i_rotations(self):
+        """
+        Same as the public method, but enforces that the returned objects are
+        PCSets for use with the prime method.
+        """
         return (PCSet.copy(rot) for rot in [self._invert(n) \
                                             for n in self.each_n()])
+
     def _m_rotations(self):
+        """
+        Same as the public method, but enforces that the returned objects are
+        PCSets for use with the prime method.
+        """
         return (PCSet.copy(rot) for rot in [self._transpose_multiply(n) \
                                             for n in self.each_n()])
 
     def _mi_rotations(self):
+        """
+        Same as the public method, but enforces that the returned objects are
+        PCSets for use with the prime method.
+        """
         return (PCSet.copy(rot) for rot in [self._transpose_multiply(n, self._default_m * -1) \
                                             for n in self.each_n()])
 

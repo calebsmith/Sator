@@ -140,8 +140,8 @@ class BinIntTest(TestCase):
         self.pcset2 = PCSet(0, 3, 4, 6)
 
     def testSetInt(self):
-        self.assertEqual(self.pcset.setint(), 18)
-        self.assertEqual(self.pcset2.setint(), 89)
+        self.assertEqual(self.pcset.setint, 18)
+        self.assertEqual(self.pcset2.setint, 89)
 
     def testFromInt(self):
         self.assertEqual(utils.fromint(18), self.pcset._unique_pcs)
