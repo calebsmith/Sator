@@ -106,7 +106,7 @@ class SetRowBase():
             pitches = self.pitches
         new = self.__class__(pitches, mod=self._mod, ordered=self._ordered,
                              multiset=self._multiset)
-        if isinstance(self, PSetBase):
+        if isinstance(self, PPCSetBase):
             new.canon(self._canon_t, self._canon_i, self._canon_m)
         new._default_m = self._default_m
         return new
@@ -413,7 +413,7 @@ class ToneRow(SetRowBase, PCBase):
         self._multiset = False
 
 
-class PSetBase(SetRowBase):
+class PPCSetBase(SetRowBase):
     """Base class for PCSet and PSet"""
 
     _canon_t = True
@@ -700,7 +700,7 @@ class PSetBase(SetRowBase):
             yield PCSet(self.copy(utils.fromint(sub.pcint)))
 
 
-class PCSet(PSetBase, PCBase):
+class PCSet(PPCSetBase, PCBase):
     """
     A Class for pitch class sets which adds pitch class only methods
     """
@@ -734,7 +734,7 @@ class PCSet(PSetBase, PCBase):
             self.pitches = other.pitches
 
 
-class PSet(PSetBase):
+class PSet(PPCSetBase):
     """A class for pitch sets, which adds pitch set only methods."""
     _ordered = True
     pass

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from unittest import TestCase, main
 
-from pset import PSetBase, PCSet, PSet
+from pset import PPCSetBase, PCSet, PSet
 import utils
 
 
@@ -71,7 +71,7 @@ class AddTests(TestCase):
         self.s = set(self.l)
 
     def testaddInt(self):
-        a = PSetBase() + self.i
+        a = PPCSetBase() + self.i
         self.assertEqual(a, self.i)
 
     def testaddList(self):
@@ -88,9 +88,9 @@ class AddTests(TestCase):
         self.assertEqual(a, self.s)
 
     def testaddPPCSetTypes(self):
-        a = PSetBase([0, 1])
-        b = PSetBase([2, 3])
-        c = PSetBase()
+        a = PPCSetBase([0, 1])
+        b = PPCSetBase([2, 3])
+        c = PPCSetBase()
         c + a + b
         self.assertEqual(c, PSet([0, 1, 2, 3]))
         self.assertEqual(c, PCSet([0, 1, 2, 3]))
