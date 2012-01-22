@@ -18,7 +18,7 @@ def transpose_multiply(pitches, sub_n, sub_m):
     result = multiply(pitches, sub_m)
     return transpose(result, sub_n)
 
-class SetRowBase():
+class SetRowBase(object):
     """Base class for PC/pitch sets and tone rows"""
 
     #TODO: limit pitches to within PITCH_LIMIT bounds
@@ -306,7 +306,7 @@ class SetRowBase():
         return result
 
 
-class PCBase():
+class PCBase(object):
     """Base class for Tone rows and PC sets"""
 
     def m(self, sub_n=0):
