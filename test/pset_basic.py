@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from unittest import TestCase, main
 
-from pset import PPCSetBase, PCSet, PSet
+from core import PPCSetBase, PCSet, PSet
 import utils
 
 

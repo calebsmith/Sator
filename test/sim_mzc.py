@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from unittest import TestCase, main
 
-from pset import PCSet, PSet
+from core import PCSet, PSet
 from sim import *
 
 class SimMZCTests(TestCase):        

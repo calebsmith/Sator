@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from unittest import TestCase, main
 
-from pset import ToneRow
+from core import ToneRow
 
 
 class ToneRowTests(TestCase):        
