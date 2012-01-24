@@ -247,6 +247,15 @@ class SetRowBase(object):
         for num in xrange(0, self._mod):
             yield num
 
+    def each_tto(self):
+        """
+        Yields an (n, m) pair for each TTO that can be performed on the given
+        object
+        """
+        for m in [1, -1, self._default_m, self._mod - self._default_m]:
+            for n in self.each_n():
+                yield (n, m)
+
     def _transpose(self, sub_n=0):
         return self.copy(transpose(self.pitches, sub_n))
 
@@ -312,12 +321,7 @@ class SetRowBase(object):
         """
         Return a flat list of objects for each possible TTO of the given object
         """
-        result = []
-        result.extend(self.t_rotations)
-        result.extend(self.i_rotations)
-        result.extend(self.m_rotations)
-        result.extend(self.mi_rotations)
-        return result
+        return [self._transpose_multiply(n, m) for n, m in self.each_tto()]
 
 
 class PCBase(object):
@@ -703,17 +707,7 @@ class PPCSetBase(SetRowBase):
         A property that returns the list of (n, m) pairs that produce an
         invariant set via TnMm
         """
-        indexes = [index for index, rotation in enumerate(self.all_rotations) \
-                   if rotation == self]
-        pairs = []
-        for index in indexes:
-            n = index % self._mod
-            oper = index / self._mod
-            for i2, m in enumerate([1, -1, self._default_m, self._mod - self._default_m]):
-                if oper == i2:
-                    break
-            pairs.append((n, m))
-        return pairs
+        return [(n, m) for n, m in self.each_tto() if self._transpose_multiply(n, m) == self]
 
     def supersets(self, limit=0):
         """
