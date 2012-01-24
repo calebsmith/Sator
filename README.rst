@@ -1,5 +1,5 @@
 Sator
-================
+=====
 
 A python module for atonal music analysis.
 
@@ -12,16 +12,21 @@ Features
         * Multiset vs. Unique element sets
         * A configurable Modulus
         * Definable canonical operators - (TTO's used to determine SC membership)
+ * Easily construct matrices, find prime forms and interval class vectors.
+ * Compare pitch or pitch class sets with various similarity relations
+ * Explore non-standard pitch class spaces.
 
 Requirements
 ------------
 
- * None
+ * There are no requirements for sator.
 
 Installation
 ------------
 
-Installation instructions.
+sator is available on `PyPI <http://pypi.python.org/pypi/sator>`_, so the easiest way to install it is to use `pip <http://pip.openplans.org/>`_::
+
+    pip install sator
 
 Authors
 -------

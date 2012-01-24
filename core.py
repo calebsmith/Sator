@@ -6,15 +6,30 @@ from const import HIGH_PITCH_LIMIT, LOW_PITCH_LIMIT, Z_PARTNERS
 
 
 def transpose(pitches, sub_n=0):
+    """
+    Given an object and n, returns an object of the same type after Tn
+    """
     return [pitch + sub_n for pitch in pitches]
 
 def invert(pitches, sub_n=0):
+    """
+    Given an object and n, returns an object of the same type after TnI.
+    If n is not provided, n is assumed to be 0
+    """
     return transpose(multiply(pitches, -1), sub_n)
 
 def multiply(pitches, sub_m):
+    """
+    Given an object and n, returns an object of the same type after TnMm,
+    where m is required. (For mod 12, m is usually 5.)
+    """
     return [pitch * sub_m for pitch in pitches]
 
 def transpose_multiply(pitches, sub_n, sub_m):
+    """
+    Given an object, n, and m, returns an object of the same type after TnMm.
+    All arguments are required.
+    """
     result = multiply(pitches, sub_m)
     return transpose(result, sub_n)
 
@@ -593,8 +608,8 @@ class PPCSetBase(SetRowBase):
     @property
     def prime_operation(self):
         """
-        The (n, m) pair to perform on the given object in order to obtain its
-        prime.
+        A property that returns (n, m) to perform on the given object via TnMm
+        in order to obtain its prime form.
         """
         low_vals =[min(izip(operation, count())) \
             for operation in self._rotation_ints]
@@ -666,8 +681,8 @@ class PPCSetBase(SetRowBase):
     @property
     def zpartner(self):
         """
-        Returns the Z-partner of the given object if it exists, otherwise
-        return None.
+        Property that returns the Z-partner of the given object if it exists,
+        otherwise returns None.
         """
         if self._mod > 12:
             return None
@@ -681,6 +696,23 @@ class PPCSetBase(SetRowBase):
             p = each.prime._unique_pcs
             if each.icv == self.icv and p != self.prime._unique_pcs:
                 return self.copy(p)
+
+    def invariance_vector(self):
+        """
+        A property that returns the list of (n, m) pairs that produce an
+        invariant set via TnMm
+        """
+        indexes = [index for index, rotation in enumerate(self.all_rotations) \
+                   if rotation == self]
+        pairs = []
+        for index in indexes:
+            n = index % self._mod
+            oper = index / self._mod
+            for i2, m in enumerate([1, -1, self._default_m, self._mod - self._default_m]):
+                if oper == i2:
+                    break
+            pairs.append((n, m))
+        return pairs
 
     def supersets(self, limit=0):
         """
