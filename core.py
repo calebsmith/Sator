@@ -697,6 +697,7 @@ class PPCSetBase(SetRowBase):
             if each.icv == self.icv and p != self.prime._unique_pcs:
                 return self.copy(p)
 
+    @property
     def invariance_vector(self):
         """
         A property that returns the list of (n, m) pairs that produce an
