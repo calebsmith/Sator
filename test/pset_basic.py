@@ -56,10 +56,13 @@ class InitTests(TestCase):
         b = PCSet([0, 1, 9])
         c = PSet(a)
         d = PSet(b)
-        e = PSet(c, d, [2, 8], multiset=True)
+        e = PSet([2, 8], multiset=True, ordered=False)
+        e += c + d
+        f = PSet([2, 8] + c + d, multiset=True, ordered=False)
         self.assertEqual(c, [0, 15, 6])
         self.assertEqual(d, [0, 1, 9])
-        self.assertEqual(e, [0, 15, 6, 0, 1, 9, 2, 8])
+        self.assertTrue(e == [0, 15, 6, 0, 1, 9, 2, 8])
+        self.assertTrue(f == [0, 15, 6, 0, 1, 9, 2, 8])
 
 
 class AddTests(TestCase):
@@ -91,7 +94,7 @@ class AddTests(TestCase):
         a = PPCSetBase([0, 1])
         b = PPCSetBase([2, 3])
         c = PPCSetBase()
-        c + a + b
+        c = a + b
         self.assertEqual(c, PSet([0, 1, 2, 3]))
         self.assertEqual(c, PCSet([0, 1, 2, 3]))
 
@@ -228,7 +231,7 @@ class SequenceTest(TestCase):
         self.pset.multiset(False)
         self.assertEqual(len(self.pset + [0, 2, 5]), 5)
         self.pset.multiset(True)
-        self.assertEqual(len(self.pset + [0, 2, 5]), 8)
+        self.assertEqual(len(self.pset + [0, 2, 5]), 7)
 
 
 class ReprTest(TestCase):

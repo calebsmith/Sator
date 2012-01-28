@@ -53,39 +53,55 @@ class SetRowBase(object):
         self.multiset(multiset)
         self.pitches = []
         if len(args) == 1:
-            self.__add__(args[0])
+            self.pitches = self.__add__(args[0], internal=True)
         elif len(args) > 1:
+            result = []
             for arg in args:
-                self.__add__(arg)
-
-    def __add__(self, other):
-        ps = other        
-        if isinstance(other, (int, long)):
-            ps = [other]
-        if isinstance(other, set):
-            ps = [int(num) for num in other]
-        self.pitches.extend(ps)
+                result += self.__add__(arg, internal=True)
+            self.pitches = result
         if not self._multiset:
             self.pitches = self._rm_dupes(self.pitches)
-        return self
 
-    #TODO: add a __radd__ ?
+    def __add__(self, other, **kwargs):
+        internal = kwargs.get('internal', False)
+        ps = other
+        if isinstance(other, SetRowBase):
+            ps = other.ppc[:]
+        if isinstance(other, (int, long)):
+            ps = [other]
+        if isinstance(other, (tuple, list)):
+            ps = list(other)
+        if isinstance(other, set):
+            ps = [int(num) for num in other]
+        ps = self.pitches[:] + ps
+        if not self._multiset:
+            ps = self._rm_dupes(ps)
+        # If initializing, returning an instance creates infinite recursion
+        ps = self.copy(ps) if not internal else ps
+        return ps
+
+    def __radd__(self, other):
+        return self.__add__(other)
 
     def __eq__(self, other):
         """Compare equality between a ToneRow/PSet/PCSet and another object"""
-
+        try:
+            that = other.copy()
+        except AttributeError:
+            try:
+                that = other[:]
+            except TypeError:
+                that = [other]
         #Are we comparing pitches as ordered lists or set membership?
         if not self._ordered and isinstance(other, (tuple, list)):
-            other = set(other)
+            that = set(that)
         #Is the other a PSet/PCSet or builtin ?
-        if isinstance(other, (SetRowBase, PSet, PCSet)):
-            return self.ppc == other.ppc
-        if isinstance(other, (int, long)):
-            return self.ppc == [other]
-        if isinstance(other, (tuple, list)):
-            return self.ppc == list(other)
-        if isinstance(other, set):
-            return set(self.ppc) == other
+        if isinstance(that, SetRowBase):
+            return self.ppc == that.ppc
+        if isinstance(that, (tuple, list)):
+            return self.ppc == list(that)
+        if isinstance(that, set):
+            return set(self.ppc) == that
         else:
             return NotImplemented
         return False
