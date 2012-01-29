@@ -728,9 +728,9 @@ class PPCSetBase(SetRowBase):
             else:
                 return
         for each in self.each_card():
-            p = each.prime._unique_pcs
-            if each.icv == self.icv and p != self.prime._unique_pcs:
-                return self.copy(p)
+            if each.icv == self.icv:
+                if each.prime._unique_pcs != self.prime._unique_pcs:
+                    return self.copy(p)
 
     @property
     def invariance_vector(self):
