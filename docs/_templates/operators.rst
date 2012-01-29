@@ -38,12 +38,12 @@ Evaluation
 
 ToneRow, PCSet and PSet objects can be compared to instances of either type for equality and inequality using the == and != operators.
 Use the following list to see the criteria for equality amongst PCSet and PSet objects:
+
 * If one object is ordered, the pitches or pitch classes must be in the same order.
+* One object can be a list, tuple, or set rather than a ToneRow, PCSet, or PSet object.
 * A ToneRow is equal to another object if they contain the same pitch classes in the same order.
 * Two PSets are equal if they contain the same pitches.
-* A PSet and a list are equal if they contain the same pitches
 * Two PCSets are equal if they contain the same pitch classes.
-* A PCSet and a list are equal if they contain the same pitch classes.
 * A PSet and PCSet are equal if they contain the same pitch classes.
 
 Addition
@@ -64,4 +64,3 @@ Addition can also be used for evaluation such as:
 Subtraction
 -----------
 
-Substraction...

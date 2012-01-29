@@ -464,13 +464,11 @@ class PPCSetBase(SetRowBase):
             rm_pcs = [other]
         if isinstance(other, set):
             rm_pcs = [int(num) for num in other]
+        results = self.pitches[:]
         for pc in rm_pcs:
-            self._rm_pc(pc)
-        return self
-
-    def _rm_pc(self, pc):
-        while pc in self.pitches:
-            self.pitches.remove(pc)
+            while pc in results:
+                results.remove(pc)
+        return self.copy(results)
 
     def insert(self, place, pitch):
         """

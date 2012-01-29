@@ -83,15 +83,14 @@ Out: 3</pre>
 <div class="section" id="evaluation">
 <h2>Evaluation<a class="headerlink" href="#evaluation" title="Permalink to this headline">¶</a></h2>
 <p>ToneRow, PCSet and PSet objects can be compared to instances of either type for equality and inequality using the == and != operators.
-Use the following list to see the criteria for equality amongst PCSet and PSet objects.
-* Two PSets are equal if they contain the same pitches.
-* A PSet and a list are equal if they contain the same pitches</p>
+Use the following list to see the criteria for equality amongst PCSet and PSet objects:</p>
 <ul class="simple">
-<li>Two PCSets are equal if they contain the same pitch classes.</li>
-<li>A PCSet and a list are equal if they contain the same pitch classes.</li>
-<li>A PSet and PCSet are equal if they contain the same pitch classes.</li>
 <li>If one object is ordered, the pitches or pitch classes must be in the same order.</li>
-<li>A ToneRow is equal to another object, if they contain the same pitch classes in the same order.</li>
+<li>A ToneRow is equal to another object if they contain the same pitch classes in the same order.</li>
+<li>Two PSets are equal if they contain the same pitches.</li>
+<li>Two PCSets are equal if they contain the same pitch classes.</li>
+<li>A PSet and PCSet are equal if they contain the same pitch classes.</li>
+<li>A ToneRow, PSet, or PCSet is considered equal to a list if the list contains the same pitches for PSets, or pitch classes for ToneRows and PCSets.</li>
 </ul>
 </div>
 <div class="section" id="addition">
