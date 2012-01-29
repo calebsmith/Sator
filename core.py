@@ -128,6 +128,9 @@ class SetRowBase(object):
         for p in self.ppc:
             yield p
 
+    def __len__(self):
+        return len(self.ppc)
+
     def __repr__(self):
         return str(self.ppc)
 
@@ -454,8 +457,20 @@ class PPCSetBase(SetRowBase):
     _canon_i = True
     _canon_m = False
 
-    def __len__(self):
-        return len(self.ppc)
+    def __sub__(self, other):
+        """Remove all instances of a given pc from a pcset"""
+        rm_pcs = other
+        if isinstance(other, (int, long)):
+            rm_pcs = [other]
+        if isinstance(other, set):
+            rm_pcs = [int(num) for num in other]
+        for pc in rm_pcs:
+            self._rm_pc(pc)
+        return self
+
+    def _rm_pc(self, pc):
+        while pc in self.pitches:
+            self.pitches.remove(pc)
 
     def insert(self, place, pitch):
         """
@@ -764,21 +779,6 @@ class PCSet(PPCSetBase, PCBase):
     """
     A Class for pitch class sets which adds pitch class only methods
     """
-
-    def __sub__(self, other):
-        """Remove all instances of a given pc from a pcset"""
-        rm_pcs = other
-        if isinstance(other, (int, long)):
-            rm_pcs = [other]
-        if isinstance(other, set):
-            rm_pcs = [int(num) for num in other]
-        for pc in rm_pcs:
-            self._rm_pc(pc)
-        return self
-
-    def _rm_pc(self, pc):
-        while pc in self.pitches:
-            self.pitches.remove(pc)
 
     def c(self):
         """Change the given object in place to its literal compliment."""

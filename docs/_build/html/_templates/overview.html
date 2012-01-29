@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="Sator v.01 documentation" href="../index.html" />
-    <link rel="next" title="Core module" href="core.html" />
+    <link rel="next" title="Data Inspection" href="data_inspection.html" />
     <link rel="prev" title="Sator" href="../index.html" /> 
   </head>
   <body>
@@ -37,7 +37,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="core.html" title="Core module"
+          <a href="data_inspection.html" title="Data Inspection"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="../index.html" title="Sator"
@@ -52,8 +52,76 @@
           <div class="body">
             
   <div class="section" id="overview">
-<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
-<p>Not yet implemented.</p>
+<span id="id1"></span><h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<p>In this overview, we will discuss the most essential parts of sator, but it is assumed that the reader is well versed in atonal theory.</p>
+<div class="section" id="constructing-tone-rows-and-pitch-pitch-class-sets">
+<h2>Constructing Tone Rows and Pitch/Pitch Class Sets<a class="headerlink" href="#constructing-tone-rows-and-pitch-pitch-class-sets" title="Permalink to this headline">¶</a></h2>
+<p>The core module in sator contains the three essential classes for instantiating
+and manipulating tone rows, pitch sets, and pitch class sets.</p>
+<p>To construct rows and sets, import the ToneRow, PCSet, and PSet classes from
+the core module as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">sator.core</span> <span class="kn">import</span> <span class="n">ToneRow</span><span class="p">,</span> <span class="n">PCSet</span><span class="p">,</span> <span class="n">PSet</span>
+</pre></div>
+</div>
+<p>To instantiate an empty pitch set, or pitch class set, use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="n">PSet</span><span class="p">()</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">PCSet</span><span class="p">()</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>ToneRow objects are excluded from the above example because by definition, they cannot be empty.</li>
+</ul>
+<p>The classes&#8217; constructors take an optional number of positional arguments as pitches or pc&#8217;s.
+These arguments can be integers, lists, tuples, or another tone row, pitch class set, or pitch set object.
+Any of the following are both valid and equivalent:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="n">PSet</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">PSet</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">PSet</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">PCSet</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The constructors also take several optional keyword arguments. For further details, refer to <a class="reference internal" href="constructor_options.html#constructor-options"><em>Constructor Options</em></a></p>
+<p>When constructing a pitch set from a pitch class set and converting back to a pitch set, care must be taken so that the the pitch data remains unmolested.
+In this example, pitch set c will contain the pitch classes of b, rather than the pitches from a:</p>
+<div class="highlight-python"><pre>a = PSet(0, 25, -1)
+b = PCSet(a)
+c = PSet(b)
+print c
+Out: [0, 1, 11]</pre>
+</div>
+<p>To maintain pitch data, use the .pitches property of the PCSet explicitly:</p>
+<div class="highlight-python"><pre>c = PSet(b.pitches)
+print c
+Out: [0, 25, -1]</pre>
+</div>
+<p>To understand this distinction and the importance of the .ppc property refer to <a class="reference internal" href="data_inspection.html#data-inspection"><em>Data Inspection</em></a></p>
+</div>
+<div class="section" id="operating-on-tone-row-and-pitch-pitch-class-objects">
+<h2>Operating on Tone Row and Pitch/Pitch Class objects<a class="headerlink" href="#operating-on-tone-row-and-pitch-pitch-class-objects" title="Permalink to this headline">¶</a></h2>
+<p>Each of these objects can be iterated over, has a length, and with the exception of tone rows, can have additional pitches or pitch classes added or removed from them.
+The following example introduces an overview of the supported operators:</p>
+<div class="highlight-python"><pre>a = PCSet([0, 3, 9])
+a = a + 11
+a = a - 3
+print a
+Out: [0, 9, 11]
+for pc in a:
+    print pc
+Out: 0
+Out: 9
+Out: 11
+print len(a)
+Out: 3</pre>
+</div>
+<p>Similarly, pitch and pitch sets, but not tone rows, have an insert method. This is meaningful only for sets which have their ordered field set to True. Insert takes an index and a new pitch/pitch class as it&#8217;s arguments.
+This method can be used as follows:</p>
+<div class="highlight-python"><pre>a = PCSet([0, 4, 8], ordered=True)
+a.insert(1, 2)
+print a
+Out: [0, 2, 4, 8]</pre>
+</div>
+<p>Refer to <a class="reference internal" href="operators.html#operators"><em>Operators</em></a> for more specifics on these operators, including some gotchas.</p>
+</div>
 </div>
 
 
@@ -62,12 +130,21 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Overview</a><ul>
+<li><a class="reference internal" href="#constructing-tone-rows-and-pitch-pitch-class-sets">Constructing Tone Rows and Pitch/Pitch Class Sets</a></li>
+<li><a class="reference internal" href="#operating-on-tone-row-and-pitch-pitch-class-objects">Operating on Tone Row and Pitch/Pitch Class objects</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="../index.html"
                         title="previous chapter">Sator</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="core.html"
-                        title="next chapter">Core module</a></p>
+  <p class="topless"><a href="data_inspection.html"
+                        title="next chapter">Data Inspection</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/_templates/overview.txt"
@@ -100,7 +177,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="core.html" title="Core module"
+          <a href="data_inspection.html" title="Data Inspection"
              >next</a> |</li>
         <li class="right" >
           <a href="../index.html" title="Sator"
