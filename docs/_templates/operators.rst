@@ -46,21 +46,22 @@ Use the following list to see the criteria for equality amongst PCSet and PSet o
 * Two PCSets are equal if they contain the same pitch classes.
 * A PSet and PCSet are equal if they contain the same pitch classes.
 
-Addition
---------
+Addition and Subtraction
+------------------------
 
-Pitches or pitch classes can be added to an existing set with the += or = + idioms.
-The addition operator returns a new object, so it can also be used to instantiate a new objet.
+Pitches or pitch classes can be added or removed from an existing set with the += or = + idioms.
+The addition and subtraction operators each return a new object, so it can also be used to instantiate a new object.
+Integers, lists, tuples and sets can all be added or subtracted.
 For examle::
     a += [3, 9]
     b = b + [0]
     c = a + b
 
-Addition can also be used for evaluation such as:
+Addition and subtraction can also be used for evaluation such as:
     a = PSet(0, 1, 11)
     a + [3, 9] == [0, 1, 3, 9, 11]
     Out: True
+    a - 1 == [0, 11]
+    Out: True
 
-Subtraction
------------
-
+* When subtracting from a multiset, each instance of the pitch or pitch class will be removed.
