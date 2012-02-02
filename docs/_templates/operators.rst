@@ -57,7 +57,8 @@ For examle::
     b = b + [0]
     c = a + b
 
-Addition and subtraction can also be used for evaluation such as:
+Addition and subtraction can also be used for evaluation such as::
+
     a = PSet(0, 1, 11)
     a + [3, 9] == [0, 1, 3, 9, 11]
     Out: True
@@ -66,7 +67,7 @@ Addition and subtraction can also be used for evaluation such as:
 
 * When subtracting from a multiset, each instance of the pitch or pitch class will be removed.
 When adding or subtracting a pitch or pitch class is not possible, because it is already present or not in the instance, no errors are raised.
-For example:
+For example::
     a = PSet(0, 1, 11)
     print a - 3
     Out: [0, 1, 11]
