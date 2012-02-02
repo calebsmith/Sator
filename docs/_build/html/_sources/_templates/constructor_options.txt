@@ -10,7 +10,7 @@ The PCSet and PSet classes take the following keyword arguments:
 Key                  Type          Description                         Example         Default
 ==================   ============  ==================================  ==============  ===============================
 mod                  int           Set the object's modulus            mod=7           12
-ordered              boolean       Is the set ordered or unordered?    ordered=True    False for PCSet, True for PSet
+ordered              boolean       Is the set ordered or unordered?    ordered=True    False
 multiset             boolean       Is the set a multiset?              multiset=True   False
 ==================   ============  ==================================  ==============  ===============================
 
