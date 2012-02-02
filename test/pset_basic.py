@@ -198,6 +198,8 @@ class GetItemTest(TestCase):
 
     def testgetInt(self):
         self.assertEqual(self.pcset[6], [9])
+        self.assertEqual(self.pset[6], [9])
+        self.pset.ordered(True)
         self.assertEqual(self.pset[6], [35])
 
     def testgetRange(self):

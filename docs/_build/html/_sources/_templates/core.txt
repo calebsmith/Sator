@@ -1,5 +1,5 @@
-Core module
-===========
+Core module Index
+=================
 
 .. automodule:: core
     :members:
