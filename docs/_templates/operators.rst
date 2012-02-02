@@ -36,8 +36,8 @@ This is best illustrated by the following example, as a contains 3 pitches, and 
 Evaluation
 ----------
 
-ToneRow, PCSet and PSet objects can be compared to instances of either type for equality and inequality using the == and != operators.
-Use the following list to see the criteria for equality amongst PCSet and PSet objects:
+ToneRow, PCSet and PSet objects can be compared to each other for equality and inequality using the == and != operators.
+Use the following list to see the criteria for equality amongst these objects:
 
 * If one object is ordered, the pitches or pitch classes must be in the same order.
 * One object can be a list, tuple, or set rather than a ToneRow, PCSet, or PSet object.
@@ -51,7 +51,7 @@ Addition and Subtraction
 
 Pitches or pitch classes can be added or removed from an existing set with the += or = + idioms.
 The addition and subtraction operators each return a new object, so it can also be used to instantiate a new object.
-Integers, lists, tuples and sets can all be added or subtracted.
+Integers, lists, tuples, sets and instances of sator core objects can all be added or subtracted.
 For examle::
     a += [3, 9]
     b = b + [0]
@@ -65,3 +65,8 @@ Addition and subtraction can also be used for evaluation such as:
     Out: True
 
 * When subtracting from a multiset, each instance of the pitch or pitch class will be removed.
+When adding or subtracting a pitch or pitch class is not possible, because it is already present or not in the instance, no errors are raised.
+For example:
+    a = PSet(0, 1, 11)
+    print a - 3
+    Out: [0, 1, 11]
