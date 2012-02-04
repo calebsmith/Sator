@@ -257,7 +257,7 @@ class SetRowBase(object):
         if not sub_m:
             sub_m = self._default_m
         result = [pc % self._mod for pc in \
-                  utils.transpose_multiply(self.pitches, sub_n, sub_m)]
+                  utils.transpose_multiply(self.pcs, sub_n, sub_m)]
         return self.copy(result)
 
     def t(self, sub_n):
@@ -767,3 +767,15 @@ class PCSet(PPCSetBase, PCBase):
 class PSet(PPCSetBase):
     """A class for pitch sets, which adds pitch set only methods."""
     pass
+
+def transpose(a, n):
+    return a.copy(utils.transpose(a.pitches, n))
+
+def invert(a, n=0):
+    return a.copy(utils.invert(a.pitches, n))
+
+def multiply(a, m=5):
+    return a.copy(utils.multiply(a.pcs, m))
+
+def transpose_multiply(a, n, m=5):
+    return a.copy(utils.transpose_multiply(a.pcs, n, m))
