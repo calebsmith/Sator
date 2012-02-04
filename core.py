@@ -768,6 +768,7 @@ class PSet(PPCSetBase):
     """A class for pitch sets, which adds pitch set only methods."""
     pass
 
+
 def transpose(a, n):
     return a.copy(utils.transpose(a.pitches, n))
 
