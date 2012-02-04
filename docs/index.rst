@@ -8,6 +8,7 @@ Contents
     :maxdepth: 2
 
     _templates/overview
+    _templates/constructor_options
     _templates/data_inspection
     _templates/operators
     _templates/ttos

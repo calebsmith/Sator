@@ -9,14 +9,15 @@ For example, a PCSet may have the pitches [0, 13, -1] and it's pcs property woul
 
 The following table shows the available properties/fields along with a description for each.
 
-===========  =============
-Property     Description
-===========  =============
+===========  =====================================================
+Property     Description                                          
+===========  =====================================================
 pitches      An ordered list of pitches
 pcs          An ordered list of pitch classes
 uo_pitches   An unordered list of pitches
 uo_pcs       An unordered list of pitch classes
-ppc          The ordered or unordered pitches or pitch classes, determined by the class and the ordered attribute
+ppc          Best representation of the object as described below.
+==================================================================
 
 The following rules are used to determine what the ppc property should output:
 
