@@ -13,7 +13,7 @@ class ToneRowTests(TestCase):
         # Make sure exception is thrown if args < mod
         try:
             tonerow = ToneRow([0])
-        except ToneRow.IncompleteException:
+        except ToneRow.IncompleteToneRow:
             self.assertTrue(True)
         else:
             self.assertTrue(False)

@@ -347,7 +347,7 @@ class PCBase(object):
 class ToneRow(SetRowBase, PCBase):
     _modulus = 12
 
-    class IncompleteException(Exception):
+    class IncompleteToneRow(Exception):
         pass
 
     def __init__(self, *args, **kwargs):
@@ -356,7 +356,7 @@ class ToneRow(SetRowBase, PCBase):
         if len(self.ppc) < self._mod:
             msg = 'Tone rows must be instantiated with a number of ' + \
                   'pitches or pcs equal to their modulus'
-            raise self.IncompleteException(msg)
+            raise self.IncompleteToneRow(msg)
 
     def swap(self, a, b):
         """
@@ -769,6 +769,10 @@ class PSet(PPCSetBase):
     pass
 
 
+class InvalidTTO(Exception):
+    pass
+
+
 def transpose(a, n):
     return a.copy(utils.transpose(a.pitches, n))
 
@@ -776,7 +780,11 @@ def invert(a, n=0):
     return a.copy(utils.invert(a.pitches, n))
 
 def multiply(a, m=5):
+    if a.__class__ == PSet:
+        raise InvalidTTO('Pitch sets can not be operated on with TnMm')
     return a.copy(utils.multiply(a.pcs, m))
 
 def transpose_multiply(a, n, m=5):
+    if a.__class__ == PSet:
+        raise InvalidTTO('Pitch sets can not be operated on with TnMm')
     return a.copy(utils.transpose_multiply(a.pcs, n, m))

@@ -53,7 +53,7 @@ When instantiating a new ToneRow with a modulus other than 12, it must be specif
 
 The following are important considerations when instantiating and working with tone rows:
 
-* ToneRows must have each possible pitch class. If instantiating with fewer, an IncompleteException is raised.
+* ToneRows must have each possible pitch class. If instantiating with fewer, an IncompleteToneRow exception is raised.
 * ToneRows are ordered by definition and can not have their ordered field set to False
 * ToneRows can not be multisets.
 
