@@ -121,6 +121,38 @@ print a - 3
 Out: [0, 1, 11]</pre>
 </div>
 </div>
+<div class="section" id="insert">
+<h2>Insert<a class="headerlink" href="#insert" title="Permalink to this headline">¶</a></h2>
+<p>Similarly, pitch and pitch sets, but not tone rows, have an insert method. This method is meaningful only for sets which have their ordered field set to True but still adds the pitch or pitch class nonetheless.
+Insert takes an index and a new pitch/pitch class as it&#8217;s arguments.
+This method can be used as follows:</p>
+<div class="highlight-python"><pre>a = PCSet([0, 4, 8], ordered=True)
+a.insert(1, 2)
+print a
+Out: [0, 2, 4, 8]</pre>
+</div>
+</div>
+<div class="section" id="copy">
+<h2>Copy<a class="headerlink" href="#copy" title="Permalink to this headline">¶</a></h2>
+<p>Objects are mutable in Python, which may lead to unexpected behavior. For example:</p>
+<div class="highlight-python"><pre>a = PSet(0, 3, 6, ordered=True)
+b = a
+b += 8
+print a
+Out: [0, 3, 6, 8]</pre>
+</div>
+<p>To instantiate a new ToneRow, PCSet or PSet from another use the copy method as shown below:</p>
+<div class="highlight-python"><pre>a = PSet(0, 3, 6, ordered=True)
+b = a.copy()
+b += 8
+print a
+Out: [0, 3, 6]
+print b
+Out: [0, 3, 6, 8]
+print b.ordered
+out: True</pre>
+</div>
+</div>
 </div>
 
 
@@ -135,6 +167,8 @@ Out: [0, 1, 11]</pre>
 <li><a class="reference internal" href="#iteration-and-length">Iteration and Length</a></li>
 <li><a class="reference internal" href="#evaluation">Evaluation</a></li>
 <li><a class="reference internal" href="#addition-and-subtraction">Addition and Subtraction</a></li>
+<li><a class="reference internal" href="#insert">Insert</a></li>
+<li><a class="reference internal" href="#copy">Copy</a></li>
 </ul>
 </li>
 </ul>

@@ -71,3 +71,39 @@ For example::
     a = PSet(0, 1, 11)
     print a - 3
     Out: [0, 1, 11]
+
+
+Insert
+------
+
+Similarly, pitch and pitch sets, but not tone rows, have an insert method. This method is meaningful only for sets which have their ordered field set to True but still adds the pitch or pitch class nonetheless.
+Insert takes an index and a new pitch/pitch class as it's arguments.
+This method can be used as follows::
+
+    a = PCSet([0, 4, 8], ordered=True)
+    a.insert(1, 2)
+    print a
+    Out: [0, 2, 4, 8]
+
+Copy
+----
+
+Objects are mutable in Python, which may lead to unexpected behavior. For example::
+
+    a = PSet(0, 3, 6, ordered=True)
+    b = a
+    b += 8
+    print a
+    Out: [0, 3, 6, 8]
+
+To instantiate a new ToneRow, PCSet or PSet from another use the copy method as shown below::
+
+    a = PSet(0, 3, 6, ordered=True)
+    b = a.copy()
+    b += 8
+    print a
+    Out: [0, 3, 6]
+    print b
+    Out: [0, 3, 6, 8]
+    print b.ordered
+    out: True

@@ -72,35 +72,23 @@ the core module as follows:</p>
 <li>ToneRow objects are excluded from the above example because by definition, they cannot be empty.</li>
 </ul>
 <p>The classes&#8217; constructors take an optional number of positional arguments as pitches or pc&#8217;s.
-These arguments can be integers, lists, tuples, or another tone row, pitch class set, or pitch set object.
+These arguments can be integers, lists, tuples, or another ToneRow, PCSet, or PSet object.
 Any of the following are both valid and equivalent:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="n">PSet</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
 <span class="n">a</span> <span class="o">=</span> <span class="n">PSet</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
 <span class="n">a</span> <span class="o">=</span> <span class="n">PSet</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">PCSet</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">PSet</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The constructors also take several optional keyword arguments. For further details, refer to <a class="reference internal" href="constructor_options.html#constructor-options"><em>Constructor Options</em></a></p>
-<p>When constructing a pitch set from a pitch class set and converting back to a pitch set, care must be taken so that the the pitch data remains unmolested.
-In this example, pitch set c will contain the pitch classes of b, rather than the pitches from a:</p>
-<div class="highlight-python"><pre>a = PSet(0, 25, -1)
-b = PCSet(a)
-c = PSet(b)
-print c
-Out: [0, 1, 11]</pre>
-</div>
-<p>To maintain pitch data, use the .pitches property of the PCSet explicitly:</p>
-<div class="highlight-python"><pre>c = PSet(b.pitches)
-print c
-Out: [0, 25, -1]</pre>
-</div>
-<p>To understand this distinction and the importance of the .ppc property refer to <a class="reference internal" href="data_inspection.html#data-inspection"><em>Data Inspection</em></a></p>
+<p>For more information about how pitch/pitch class data is stored and retrieved and how to instantiate objects from objects of other classes refer to <a class="reference internal" href="data_inspection.html#data-inspection"><em>Data Inspection</em></a></p>
 </div>
 <div class="section" id="operating-on-tone-row-and-pitch-pitch-class-objects">
 <h2>Operating on Tone Row and Pitch/Pitch Class objects<a class="headerlink" href="#operating-on-tone-row-and-pitch-pitch-class-objects" title="Permalink to this headline">¶</a></h2>
 <p>Each of these objects can be iterated over, has a length, and with the exception of tone rows, can have additional pitches or pitch classes added or removed from them.
+Each class also supports an insert and copy method.
 The following example introduces an overview of the supported operators:</p>
-<div class="highlight-python"><pre>a = PCSet([0, 3, 9])
+<div class="highlight-python"><pre>a = PCSet([0, 3, 9], ordered=True)
 a = a + 11
 a = a - 3
 print a
@@ -111,16 +99,19 @@ Out: 0
 Out: 9
 Out: 11
 print len(a)
-Out: 3</pre>
-</div>
-<p>Similarly, pitch and pitch sets, but not tone rows, have an insert method. This is meaningful only for sets which have their ordered field set to True. Insert takes an index and a new pitch/pitch class as it&#8217;s arguments.
-This method can be used as follows:</p>
-<div class="highlight-python"><pre>a = PCSet([0, 4, 8], ordered=True)
-a.insert(1, 2)
+Out: 3
+a.insert(0, 10)
 print a
-Out: [0, 2, 4, 8]</pre>
+Out: [10, 0, 9, 11]
+b = a.copy()
+print b
+Out: [10, 0, 9, 11]</pre>
 </div>
-<p>Refer to <a class="reference internal" href="operators.html#operators"><em>Operators</em></a> for more specifics on these operators, including some gotchas.</p>
+<p>Refer to <a class="reference internal" href="operators.html#operators"><em>Operators</em></a> for more specifics on these operators.</p>
+</div>
+<div class="section" id="tto-s">
+<h2>TTO&#8217;s<a class="headerlink" href="#tto-s" title="Permalink to this headline">¶</a></h2>
+<p>At the heart of atonal music are the twelve tone operators, or TTO&#8217;s. Each of sator&#8217;s classes have methods for these, which are detailed at <a class="reference internal" href="ttos.html#ttos"><em>TTO&#8217;s</em></a></p>
 </div>
 </div>
 
@@ -135,6 +126,7 @@ Out: [0, 2, 4, 8]</pre>
 <li><a class="reference internal" href="#">Overview</a><ul>
 <li><a class="reference internal" href="#constructing-tone-rows-and-pitch-pitch-class-sets">Constructing Tone Rows and Pitch/Pitch Class Sets</a></li>
 <li><a class="reference internal" href="#operating-on-tone-row-and-pitch-pitch-class-objects">Operating on Tone Row and Pitch/Pitch Class objects</a></li>
+<li><a class="reference internal" href="#tto-s">TTO&#8217;s</a></li>
 </ul>
 </li>
 </ul>

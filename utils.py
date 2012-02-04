@@ -1,6 +1,33 @@
 #!/usr/bin/env python
 from const import FORTE_NAMES, FORTE_INTS
 
+def transpose(pitches, sub_n=0):
+    """
+    Given a list of pitches and n, returns an object of the same type after Tn
+    """
+    return [pitch + sub_n for pitch in pitches]
+
+def invert(pitches, sub_n=0):
+    """
+    Given an object and n, returns an object of the same type after TnI.
+    If n is not provided, n is assumed to be 0
+    """
+    return transpose(multiply(pitches, -1), sub_n)
+
+def multiply(pitches, sub_m):
+    """
+    Given an object and n, returns an object of the same type after TnMm,
+    where m is required. (For mod 12, m is usually 5.)
+    """
+    return [pitch * sub_m for pitch in pitches]
+
+def transpose_multiply(pitches, sub_n, sub_m):
+    """
+    Given an object, n, and m, returns an object of the same type after TnMm.
+    All arguments are required.
+    """
+    result = multiply(pitches, sub_m)
+    return transpose(result, sub_n)
 
 def setint(pcs):
     """Find the integer representation of an unordered PC set"""

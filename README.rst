@@ -8,10 +8,10 @@ Features
 
  * Create tone rows, pitch class sets and pitch sets.
  * Each pitch or pitch class set can have its own properties including:
-        * Ordered vs. Unordered
-        * Multiset vs. Unique element sets
-        * A configurable Modulus
-        * Definable canonical operators - (TTO's used to determine SC membership)
+     * Ordered vs. Unordered
+     * Multiset vs. Unique element sets
+     * A configurable Modulus
+     * Definable canonical operators - (TTO's used to determine SC membership)
  * Easily construct matrices, find prime forms and interval class vectors.
  * Compare pitch or pitch class sets with various similarity relations
  * Explore non-standard pitch class spaces.

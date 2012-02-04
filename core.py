@@ -5,34 +5,6 @@ import utils
 from const import HIGH_PITCH_LIMIT, LOW_PITCH_LIMIT, Z_PARTNERS
 
 
-def transpose(pitches, sub_n=0):
-    """
-    Given an object and n, returns an object of the same type after Tn
-    """
-    return [pitch + sub_n for pitch in pitches]
-
-def invert(pitches, sub_n=0):
-    """
-    Given an object and n, returns an object of the same type after TnI.
-    If n is not provided, n is assumed to be 0
-    """
-    return transpose(multiply(pitches, -1), sub_n)
-
-def multiply(pitches, sub_m):
-    """
-    Given an object and n, returns an object of the same type after TnMm,
-    where m is required. (For mod 12, m is usually 5.)
-    """
-    return [pitch * sub_m for pitch in pitches]
-
-def transpose_multiply(pitches, sub_n, sub_m):
-    """
-    Given an object, n, and m, returns an object of the same type after TnMm.
-    All arguments are required.
-    """
-    result = multiply(pitches, sub_m)
-    return transpose(result, sub_n)
-
 class SetRowBase(object):
     """Base class for PC/pitch sets and tone rows"""
 
@@ -66,7 +38,7 @@ class SetRowBase(object):
         internal = kwargs.get('internal', False)
         ps = other
         if isinstance(other, SetRowBase):
-            ps = other.ppc[:]
+            ps = other.pitches[:]
         if isinstance(other, (int, long)):
             ps = [other]
         if isinstance(other, (tuple, list)):
@@ -276,16 +248,16 @@ class SetRowBase(object):
                 yield (n, m)
 
     def _transpose(self, sub_n=0):
-        return self.copy(transpose(self.pitches, sub_n))
+        return self.copy(utils.transpose(self.pitches, sub_n))
 
     def _invert(self, sub_n=0):
-        return self.copy(invert(self.pitches, sub_n))
+        return self.copy(utils.invert(self.pitches, sub_n))
 
     def _transpose_multiply(self, sub_n=0, sub_m=0):
         if not sub_m:
             sub_m = self._default_m
         result = [pc % self._mod for pc in \
-                  transpose_multiply(self.pitches, sub_n, sub_m)]
+                  utils.transpose_multiply(self.pitches, sub_n, sub_m)]
         return self.copy(result)
 
     def t(self, sub_n):
@@ -666,7 +638,7 @@ class PPCSetBase(SetRowBase):
         into account its canonical TTO's (set these with .canon(T, I, M)).
         """
         n, m = self.prime_operation
-        return PCSet(self.copy(transpose_multiply(self.pitches, n, m)))
+        return PCSet(self.copy(utils.transpose_multiply(self.pitches, n, m)))
 
     @property
     def mpartner(self):

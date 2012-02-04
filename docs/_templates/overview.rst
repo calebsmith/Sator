@@ -25,40 +25,26 @@ To instantiate an empty pitch set, or pitch class set, use::
 * ToneRow objects are excluded from the above example because by definition, they cannot be empty.
 
 The classes' constructors take an optional number of positional arguments as pitches or pc's.
-These arguments can be integers, lists, tuples, or another tone row, pitch class set, or pitch set object.
+These arguments can be integers, lists, tuples, or another ToneRow, PCSet, or PSet object.
 Any of the following are both valid and equivalent::
 
     a = PSet([0, 2, 4, 6, 8])
     a = PSet(0, 2, 4, 6, 8)
     a = PSet(0, [2, 4], 6, 8)
-    b = PCSet(a)
+    b = PSet(a)
 
 The constructors also take several optional keyword arguments. For further details, refer to :ref:`constructor_options`
 
-When constructing a pitch set from a pitch class set and converting back to a pitch set, care must be taken so that the the pitch data remains unmolested.
-In this example, pitch set c will contain the pitch classes of b, rather than the pitches from a::
-
-    a = PSet(0, 25, -1)
-    b = PCSet(a)
-    c = PSet(b)
-    print c
-    Out: [0, 1, 11]
-
-To maintain pitch data, use the .pitches property of the PCSet explicitly::
-
-    c = PSet(b.pitches)
-    print c
-    Out: [0, 25, -1]
-
-To understand this distinction and the importance of the .ppc property refer to :ref:`data_inspection`
+For more information about how pitch/pitch class data is stored and retrieved and how to instantiate objects from objects of other classes refer to :ref:`data_inspection`
 
 Operating on Tone Row and Pitch/Pitch Class objects
 ---------------------------------------------------
 
 Each of these objects can be iterated over, has a length, and with the exception of tone rows, can have additional pitches or pitch classes added or removed from them.
+Each class also supports an insert and copy method.
 The following example introduces an overview of the supported operators:: 
 
-    a = PCSet([0, 3, 9])
+    a = PCSet([0, 3, 9], ordered=True)
     a = a + 11
     a = a - 3
     print a
@@ -70,13 +56,31 @@ The following example introduces an overview of the supported operators::
     Out: 11
     print len(a)
     Out: 3
-
-Similarly, pitch and pitch sets, but not tone rows, have an insert method. This is meaningful only for sets which have their ordered field set to True. Insert takes an index and a new pitch/pitch class as it's arguments.
-This method can be used as follows::
-
-    a = PCSet([0, 4, 8], ordered=True)
-    a.insert(1, 2)
+    a.insert(0, 10)
     print a
-    Out: [0, 2, 4, 8]
+    Out: [10, 0, 9, 11]
+    b = a.copy()
+    print b
+    Out: [10, 0, 9, 11]
 
-Refer to :ref:`operators` for more specifics on these operators, including some gotchas.
+Refer to :ref:`operators` for more specifics on these operators.
+
+TTO's
+-----
+
+At the heart of atonal music are the twelve tone operators, or TTO's. Each of sator's classes have methods for these, which are detailed at :ref:`ttos`
+
+Below is a simple example of using each to modify a PCSet in place::
+
+    a = PCSet(0, 1, 3)
+    a.i()
+    print a
+    Out: [0, 9, 11]
+    a.t(6)
+    print a
+    Out: [3, 5, 6]
+    a.m()
+    Out: [1, 3, 6]
+    a.t_m(6, 7)
+    print a
+    Out: [0, 1, 3]
