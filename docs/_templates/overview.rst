@@ -84,3 +84,14 @@ Below is a simple example of using each to modify a PCSet in place::
     a.t_m(6, 7)
     print a
     Out: [0, 1, 3]
+
+Attributes, Generators, and Properties
+--------------------------------------
+
+Sator core class objects have various boolean attributes such as ordered and multiset. They also have several property and generator methods. For more information on each topic, refer to the relevant links below:
+
+:ref:`attributes`
+
+:ref:`generators`
+
+:ref:`properties`

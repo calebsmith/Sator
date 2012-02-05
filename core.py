@@ -333,14 +333,12 @@ class PCBase(object):
         sub_m = self._mod - self._default_m
         self[:] = (self._transpose_multiply(sub_n, sub_m)).pitches
         
-    def t_m(self, sub_n=0, sub_m=0):
+    def t_m(self, sub_n, sub_m):
         """
         Perform TnMm on the object in place, where n and m are positional
         arguments. If n is not provided, it defaults to 0. If m is not provided
         it defaults to the default_m of the object.
         """
-        if not sub_m:
-            sub_m = self._default_m
         self[:] = (self._transpose_multiply(sub_n, sub_m)).pitches
 
 

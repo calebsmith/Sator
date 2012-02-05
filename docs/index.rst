@@ -12,6 +12,8 @@ Contents
     _templates/data_inspection
     _templates/operators
     _templates/ttos
+    _templates/attributes
+    _templates/generators
     _templates/properties
     _templates/tone_rows
     _templates/core

@@ -107,3 +107,15 @@ To instantiate a new ToneRow, PCSet or PSet from another use the copy method as 
     Out: [0, 3, 6, 8]
     print b.ordered
     out: True
+
+Clear
+-----
+
+To remove all pitches or pitch classes from a PCSet or PSet use the clear method as shown here::
+
+    a = PSet(0, 3, 6)
+    a.clear()
+    print a
+    Out: []
+
+* Clear is not a method of ToneRow, because tone rows can never be empty
