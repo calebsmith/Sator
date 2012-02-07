@@ -95,3 +95,29 @@ Sator core class objects have various boolean attributes such as ordered and mul
 :ref:`generators`
 
 :ref:`properties`
+
+Tone Rows
+---------
+
+ToneRow objects share many of the same methods as PCSet and PSet methods, but sometimes these methods have different or limited meaning.
+ToneRow objects also have many unique methods such as: P, R, I, RI, M, MI, RM, RMI, and swap.
+
+Refer to :ref:`tone_rows` for more information
+
+Similarity Relations
+--------------------
+
+Similarity relations are imported from sator.sim and are used to make various kinds of comparisons between pitch or pitch class sets. For example::
+
+    from sator.core import PCSet
+    from sator.sim import m, c, z
+    a = PCSet(0, 1, 2, 4, 7, 9)
+    b = PCSet(0, 1, 3, 5, 6, 8)    
+    print c(a, b)
+    Out: True
+    print z(a, b)
+    Out: True
+    print m(a, b)
+    Out: False
+
+Refer to :ref:`similarity_relations` for more information.

@@ -53,6 +53,7 @@ Pitches or pitch classes can be added or removed from an existing set with the +
 The addition and subtraction operators each return a new object, so it can also be used to instantiate a new object.
 Integers, lists, tuples, sets and instances of sator core objects can all be added or subtracted.
 For examle::
+
     a += [3, 9]
     b = b + [0]
     c = a + b
@@ -66,8 +67,10 @@ Addition and subtraction can also be used for evaluation such as::
     Out: True
 
 * When subtracting from a multiset, each instance of the pitch or pitch class will be removed.
+
 When adding or subtracting a pitch or pitch class is not possible, because it is already present or not in the instance, no errors are raised.
 For example::
+
     a = PSet(0, 1, 11)
     print a - 3
     Out: [0, 1, 11]

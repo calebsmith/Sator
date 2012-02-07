@@ -16,6 +16,7 @@ Contents
     _templates/generators
     _templates/properties
     _templates/tone_rows
+    _templates/similarity
     _templates/core
 
 
