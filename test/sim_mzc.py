@@ -25,6 +25,28 @@ class SimMZCTests(TestCase):
     def testC(self):
         a = self.pcset
         b = a.abstract_compliment
-        self.assertTrue(c(a, b))   
+        self.assertTrue(c(a, b))
+
+    def testIV(self):
+        a = self.pcset
+        b = self.pcset_z
+        self.assertEqual(iv(a, b), [2, 2, 2, 2, 1, 2, 1, 3, 2, 1, 2, 4])
+
+    def testSIM(self):
+        a = self.pcset
+        b = self.pcset_z
+        self.assertEqual(sim(a, b), 9)
+
+    def testASIM(self):
+        a = self.pcset
+        b = self.pcset_z
+        self.assertEqual(asim(a, b, rational=True), (9, 21))
+
+    def testcheckmod(self):
+        a = self.pcset
+        b = PCSet(0, 3, mod=7)
+        self.assertEqual(iv(a, b), NotImplemented)
+        self.assertEqual(sim(a, b), NotImplemented)
+        self.assertEqual(asim(a, b), NotImplemented)
 
 
