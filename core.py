@@ -238,6 +238,14 @@ class SetRowBase(object):
         for num in xrange(0, self._mod):
             yield num
 
+    @classmethod
+    def each_n_in_mod(cls, mod):
+        """
+        Same as the instance method but takes one positional arg as the modulus
+        """
+        for num in xrange(0, mod):
+            yield num
+
     def each_tto(self):
         """
         Yields an (n, m) pair for each TTO that can be performed on the given
@@ -519,6 +527,14 @@ class PPCSetBase(SetRowBase):
         into account the object's modulus.
         """
         return combinations(self.each_n(), self.cardinality)
+
+    @classmethod
+    def each_card_in_mod(cls, card, mod):
+        """
+        Same as the instance method but takes two args for cardinality and
+        modulus respectively
+        """
+        return combinations(cls.each_n(mod), card)
 
     def each_set(self):
         """
