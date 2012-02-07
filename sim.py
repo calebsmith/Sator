@@ -71,8 +71,6 @@ def asim(a, b, rational=False):
     """
     sim = asim = 0
     for ic in zip(a.icv[1:], b.icv[1:]):
-        diff = abs(ic[0] - ic[1])
-        total = ic[0] + ic[1]
-        sim += diff
-        asim += total
+        sim += abs(ic[0] - ic[1])
+        asim += ic[0] + ic[1]
     return (sim, asim) if rational else sim / asim
