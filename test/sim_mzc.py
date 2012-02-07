@@ -48,5 +48,3 @@ class SimMZCTests(TestCase):
         self.assertEqual(iv(a, b), NotImplemented)
         self.assertEqual(sim(a, b), NotImplemented)
         self.assertEqual(asim(a, b), NotImplemented)
-
-
