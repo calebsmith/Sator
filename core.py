@@ -526,8 +526,7 @@ class PPCSetBase(SetRowBase):
         Yields every set with the same cardinality as the given object, taking
         into account the object's modulus.
         """
-        for pcs in combinations(self.each_n(), self.cardinality):
-            yield self.copy(pcs)
+        return (self.copy(each) for each in combinations(self.each_n(), self.cardinality))
 
     @classmethod
     def each_card_in_mod(cls, card, mod):
@@ -535,8 +534,17 @@ class PPCSetBase(SetRowBase):
         Same as the instance method but takes two args for cardinality and
         modulus respectively
         """
+        return (cls(pcs) for each in combinations(cls.each_n_in_mod(mod), card))
+
+    @classmethod
+    def each_prime_in_card_mod(cls, card, mod):
+        """
+        Yields every unique prime form with a given cardinality in the given
+        modulus
+        """
         for pcs in combinations(cls.each_n_in_mod(mod), card):
-            yield cls(pcs)
+            if cls(pcs).prime == cls(pcs):
+                yield cls(pcs)
 
     def each_set(self):
         """
