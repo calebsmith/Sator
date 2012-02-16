@@ -1,10 +1,10 @@
 Core module Index
 =================
 
-.. automodule:: core
+.. automodule:: sator.core
     :members:
 
-.. autofunction:: transpose
-.. autofunction:: invert
-.. autofunction:: multiply
-.. autofunction:: transpose_multiply
+.. autofunction:: sator.core.transpose
+.. autofunction:: sator.core.invert
+.. autofunction:: sator.core.multiply
+.. autofunction:: sator.core.transpose_multiply
