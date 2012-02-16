@@ -9,7 +9,6 @@ setup(
     include_package_data=True,
     url='https://github.com/calebsmith/Sator',
     license='GPL',
-    long_description=open('README.rst').read(),
     zip_safe=True,
     description="Sator is a python module for atonal music theory analysis.",
     classifiers=[
