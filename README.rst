@@ -28,12 +28,15 @@ Sator is available on `PyPI <http://pypi.python.org/pypi/sator>`_, so the easies
 
     pip install sator
 
-Documentation and Testing
--------------------------
+Testing
+-------
 
 * Use runtests.py to run the test suite
-* Use make html in docs/ to build the documentation.
 
 Authors
 -------
 Caleb Smith
+
+Documentation
+-------------
+The documentation is hosted on Read the Docs and is available `here <http://readthedocs.org/docs/sator/en/latest/index.html>`_
