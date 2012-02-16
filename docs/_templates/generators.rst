@@ -21,12 +21,8 @@ The each methods do not take any arguments, while the super and sub methods opti
 
 The following generators are class methods, take the arguments listed, and yield results similar to their instance method counterparts.
 
-
-
-
-    def each_n_in_mod(cls, mod):
-
-    each set in mod
-    each prime in mod
-    def each_card_in_mod(cls, card, mod):
-    def each_prime_in_card_mod(cls, card, mod):
+* each_n_in_mod(modulus) - Yields each possible n where n is 0 <= n < modulus
+* each_set_in_mod(modulus) - Yields each possible unordered set for the given modulus
+* each_prime_in_mod(modulus) - Yields each unique set-class for the given modulus
+* each_card_in_mod(cardinality, modulus) - Yields each unordered set with the given cardinality in the given modulus.
+* each_prime_in_card_mod(cardinality, modulus) - Yields each unique set-class with the given cardinality in the given modulus.
