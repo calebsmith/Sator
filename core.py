@@ -235,8 +235,7 @@ class SetRowBase(object):
         modulus.
         (An object with a modulus of 12 would return [0, 1, 2...11])
         """
-        for num in xrange(0, self._mod):
-            yield num
+        return self.each_n_in_mod(self._mod)
 
     @classmethod
     def each_n_in_mod(cls, mod):
@@ -521,12 +520,32 @@ class PPCSetBase(SetRowBase):
         """
         return utils.setint(self.prime)
 
+    def each_set(self):
+        """
+        Yields every possible set in the modulus of the given object.
+        """
+        return self.each_set_in_mod(self._mod)
+
+    def each_prime(self):
+        """
+        Yields each unique set-class in the modulus of the given object.
+        """
+        return self.each_prime_in_mod(self._mod)
+
     def each_card(self):
         """
         Yields every set with the same cardinality as the given object, taking
         into account the object's modulus.
         """
-        return (self.copy(each) for each in combinations(self.each_n(), self.cardinality))
+        return self.each_card_in_mod(self.cardinality, self._mod)
+
+    @classmethod
+    def each_set_in_mod(cls, mod):
+        return(cls(utils.fromint(integer)) for integer in xrange(0, 2 ** mod))
+
+    @classmethod
+    def each_prime_in_mod(cls, mod):
+        return(each for each in cls.each_set_in_mod(mod) if each.prime == each)
 
     @classmethod
     def each_card_in_mod(cls, card, mod):
@@ -534,7 +553,7 @@ class PPCSetBase(SetRowBase):
         Same as the instance method but takes two args for cardinality and
         modulus respectively
         """
-        return (cls(pcs) for each in combinations(cls.each_n_in_mod(mod), card))
+        return (cls(each) for each in combinations(cls.each_n_in_mod(mod), card))
 
     @classmethod
     def each_prime_in_card_mod(cls, card, mod):
@@ -542,22 +561,9 @@ class PPCSetBase(SetRowBase):
         Yields every unique prime form with a given cardinality in the given
         modulus
         """
-        for pcs in combinations(cls.each_n_in_mod(mod), card):
-            if cls(pcs).prime == cls(pcs):
-                yield cls(pcs)
-
-    def each_set(self):
-        """
-        Yields every possible set in the modulus of the given object.
-        """
-        return (self.copy(utils.fromint(integer)) \
-                for integer in xrange(0, 2 ** self._mod))
-
-    def each_prime(self):
-        """
-        Yields each unique set-class in the modulus of the given object.
-        """
-        return (each for each in self.each_set() if each.prime == each)
+        for each in combinations(cls.each_n_in_mod(mod), card):
+            if cls(each).prime == cls(each):
+                yield cls(each)
 
     @property
     def cardinality(self):

@@ -1,8 +1,8 @@
 .. _properties:
 
-==========
-Properties
-==========
+=============================
+Properties and Static Methods
+=============================
 
 Each property takes no arguments and does not require the () syntax for calling.
 The properties are grouped into categories below.
@@ -29,6 +29,8 @@ For example::
     print a.setint
     Out: 343
 
+The static or class methods that are generators are described under :ref:`generators`
+
 Rotations
 ---------
 * t_rotations - A list of objects representing each possible transposition of the given object
@@ -46,7 +48,7 @@ These methods have a limited meaning for ToneRow objects and are only available 
 * cardinality - Returns the cardinality of the set.
 * setint - Returns the set's integer representation. An unordered PCSet of the set can be derived from this integer and the fromint static method.
 * pcint - Returns the integer representation of the set's prime form.
-
+* invariance_vector - Returns a list of (n, m) pairs in which each is a TnMm operation for which the set is invariant.
 
 Set-Class
 ---------
@@ -61,7 +63,6 @@ These methods are related to the object's set-class and are therefore not availa
 * zpartner - Returns an unordered PCSet instance, which is the Z-partner of the current set, which is a PSet or PCSet.
 * literal_compliment - Returns an unordered PCSet, which represents the literal compliment of the set
 * abstract_compliment - Returns an unordered PCSet, which represents the abstract compliment of the set. This is the same as the literal compliment in prime form.
-
 
 Non-TTO transformations
 -----------------------

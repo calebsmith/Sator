@@ -24,9 +24,13 @@ Requirements
 Installation
 ------------
 
-sator is available on `PyPI <http://pypi.python.org/pypi/sator>`_, so the easiest way to install it is to use `pip <http://pip.openplans.org/>`_::
+Use git clone to obtain a local copy of sator.
 
-    pip install sator
+Documentation and Testing
+-------------------------
+
+* Use runtests.py to run the test suite
+* Use make html in docs/ to build the documentation.
 
 Authors
 -------
