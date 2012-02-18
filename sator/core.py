@@ -744,21 +744,23 @@ class PPCSetBase(SetRowBase):
     def m_vector(self, m):
         """
         Find David Lewin's M-vector.
-        Finds the number of each unique set-class with cardinality m which are
+        (Also described in Composition with Pitch Classes - Robert Morris)
+        Finds the number of each set-class with cardinality m which are
         subsets of a given pitch class. The ICV is equivalent to the m-vector
         of a pitch class when m is 2.
         """
         if m > self._mod:
             return
+        pc_set = self._pc_set
         vectors = {}
         for index, each in enumerate(self.__class__.each_card_in_mod(m, self._mod)):
-            e_prime = str(each.prime)
+            e_prime = each.pcint
             old_value = vectors.get(e_prime, 0)
-            if self._pc_set.issuperset(each._pc_set):  
-                vectors[e_prime] = old_value + 1
-            else:
-                vectors[e_prime] = old_value
-        return vectors
+            to_add = 1 if pc_set.issuperset(each._pc_set) else 0
+            vectors[e_prime] = old_value + to_add
+        return sorted([(PCSet.fromint(pcint), total) \
+                       for pcint, total in vectors.items()],
+                       key = lambda x: x[0].pcint)
 
 
     def supersets(self, limit=0):

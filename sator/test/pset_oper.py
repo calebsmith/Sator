@@ -166,10 +166,8 @@ class VectorPropertyTest(TestCase):
         self.assertEqual(PCSet(0, 6, 7, 8).invariance_vector, [(0, 1)])
 
     def testMVector(self):
-        #FIXME: Test takes far too long
-        for each in PCSet.each_set_in_mod(12):
+        for each in PCSet.each_prime_in_card_mod(3, 12):
             m_vector = each.m_vector(2)
-            m_vector = sorted(m_vector.items())
             m_vector = [vect[1] for vect in m_vector]
             self.assertEqual(each.icv[1:], m_vector)
 
