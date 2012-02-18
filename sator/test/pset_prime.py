@@ -323,16 +323,3 @@ class SupersetsTest(TestCase):
                          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
         ])
-"""
-TODO: Add tests for PPCSet methods below
-
-    Finish prime test - pass doesn't count as a unit test
-
-Untested methods:
-each_card #FIXME: Implementation of this method sucks anyways
-
-Add test for similarity relations
-
-Add tests for Tone rows
-
-"""

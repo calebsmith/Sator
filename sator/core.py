@@ -754,7 +754,7 @@ class PPCSetBase(SetRowBase):
         for index, each in enumerate(self.__class__.each_card_in_mod(m, self._mod)):
             e_prime = str(each.prime)
             old_value = vectors.get(e_prime, 0)
-            if self._pitch_set.issuperset(each._pitch_set):  
+            if self._pc_set.issuperset(each._pc_set):  
                 vectors[e_prime] = old_value + 1
             else:
                 vectors[e_prime] = old_value

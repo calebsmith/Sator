@@ -167,6 +167,8 @@ class EachTest(TestCase):
                          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
         self.pcset.mod(6)
         self.assertEqual(list(self.pcset.each_n()),[0, 1, 2, 3, 4, 5])
+        self.assertEqual(list(self.pcset.each_n()),
+                         list(PCSet.each_n_in_mod(6)))
 
     def testEach_set(self):
         self.pcset.mod(12)
@@ -174,9 +176,51 @@ class EachTest(TestCase):
         self.assertEqual(each_set[0:6], [[], [0], [1], [0, 1], [2], [0, 2]])
         self.assertEqual(each_set[-1],
                          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
+        self.assertEqual(each_set, list(PCSet.each_set_in_mod(12)))
         for index, each in enumerate(each_set):
             self.assertEqual(utils.setint(each), index)
         self.pcset.mod(4)
         each_set = list(self.pcset.each_set())
         self.assertEqual(each_set[0:3], [[], [0], [1]])
         self.assertEqual(each_set[-1], [0, 1, 2, 3])
+
+    def testEach_tto(self):
+        def check_each_tto(mod):
+            a = PCSet(0, 3, mod=mod)
+            ttos = list(a.each_tto())
+            index = 0
+            for m in (1, -1, 5, mod - 5):
+                for n in xrange(0, mod):
+                    self.assertEqual(ttos[index], (n, m))
+                    index += 1  
+        check_each_tto(12)
+        check_each_tto(7)
+        check_each_tto(15)
+
+    def testEach_card(self):
+        card = 2
+        mod = 12
+        a = PCSet(range(0, card), mod=mod)
+        aggregate = PCSet(range(0, mod), mod=mod)
+        for each, each_static in zip(a.each_card(), PCSet.each_card_in_mod(card, mod)):
+            self.assertEqual(each.cardinality, card)
+            self.assertEqual(each._pc_set.issubset(aggregate), True)
+
+    def testEach_prime_in_card_mod(self):
+        trichords = [
+            [0, 1, 2],
+            [0, 1, 3],
+            [0, 1, 4],
+            [0, 1, 5],
+            [0, 1, 6],
+            [0, 2, 4],
+            [0, 2, 5],
+            [0, 2, 6],
+            [0, 2, 7],
+            [0, 3, 6],
+            [0, 3, 7],
+            [0, 4, 8],
+        ]
+        for each in PCSet.each_prime_in_card_mod(3, 12):
+            trichords.remove(each)
+        self.assertEqual(trichords, [])
