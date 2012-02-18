@@ -155,6 +155,25 @@ class BinIntTest(TestCase):
         self.assertEqual(b, [1, 2, 4, 5, 6])
 
 
+class VectorPropertyTest(TestCase):
+    def testInvarianceVector(self):
+        a = PCSet(0, 2, 4, 6, 8, 10)
+        inv_vector = a.invariance_vector
+        for m in (1, -1, 5, 7):
+            for n in (0, 2, 4, 6, 8, 10):
+                inv_vector.remove((n, m))
+        self.assertEqual(inv_vector, [])
+        self.assertEqual(PCSet(0, 6, 7, 8).invariance_vector, [(0, 1)])
+
+    def testMVector(self):
+        #FIXME: Test takes far too long
+        for each in PCSet.each_set_in_mod(12):
+            m_vector = each.m_vector(2)
+            m_vector = sorted(m_vector.items())
+            m_vector = [vect[1] for vect in m_vector]
+            self.assertEqual(each.icv[1:], m_vector)
+
+
 class EachTest(TestCase):
     """Methods that provide each n in the modulus or each set in the modulus"""
 
