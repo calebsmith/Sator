@@ -178,9 +178,7 @@ class SetRowBase(object):
     @property
     def uo_pcs(self):
         """Returns unordered pitch classes in ascending order"""
-        output = self.pcs[:]
-        output.sort()
-        return output
+        return sorted(self.pcs[:])
 
     @property
     def _unique_pcs(self):
@@ -189,16 +187,12 @@ class SetRowBase(object):
         are guarnteed to be unique regardless of rather or not the object is a
         multiset.
         """
-        output = list(self._pc_set)
-        output.sort()
-        return output
+        return sorted(list(self._pc_set))
 
     @property
     def uo_pitches(self):
         """Returns the unordered pitches in ascending order"""
-        output = self.pitches[:]
-        output.sort()
-        return output
+        return sorted(self.pitches[:])
 
     @property
     def ppc(self):
@@ -814,7 +808,7 @@ class PCSet(PPCSetBase, PCBase):
         """
         other = self.zpartner
         if other:
-            self.pitches = other.pitches
+            self[:] = other.pitches
 
 
 class PSet(PPCSetBase):
