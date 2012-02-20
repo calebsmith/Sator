@@ -43,12 +43,29 @@ Rotations
 Set methods
 -----------
 
-These methods have a limited meaning for ToneRow objects and are only available to PSet and PCSet objects.
+These property methods have a limited meaning for ToneRow objects and are only available to PSet and PCSet objects.
 
 * cardinality - Returns the cardinality of the set.
 * setint - Returns the set's integer representation. An unordered PCSet of the set can be derived from this integer and the fromint static method.
 * pcint - Returns the integer representation of the set's prime form.
 * invariance_vector - Returns a list of (n, m) pairs in which each is a TnMm operation for which the set is invariant.
+
+These methods take one positional argument, which can be any of PSet, PCSet, list, tuple, or set and return a PCSet or boolean as appropriate.
+They mimic the Python built-in set methods of the same name. In the description, A is used to denote the current object, and B is the object that is passed in as an argument.
+* union - The union of the two objects. The resulting object has all of the elements of both. (A or B)
+* intersection - The intersection of the two objects. The resulting object has only the elements that are in both. (A and B)
+* difference - The difference of the two objects. The resulting object has the elements of A, excepting those in B.
+* symmetric_difference - The symmetric difference of the two objects. The resulting object has all of the elements of A, excepting those in B, as well as all of the elements of B, excepting those in A.
+* issuperset - Returns True if the current object is a superset of the argument object, otherwise False
+* issubset - Returns True if the current object is a subset of the argument object, otherwise False
+* isdisjoint - Returns True if the current object and argument object are disjoin, otherwise False
+
+It is worthwhile to note that the behavior of some of these methods are duplicated elsewhere and that they are included here for ease of use with other set methods.
+The following methods have the same behavior as the method they are listed with:
+
+* union - The + operator
+* difference - The - operator
+
 
 Set-Class
 ---------

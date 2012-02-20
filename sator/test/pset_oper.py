@@ -172,6 +172,44 @@ class VectorPropertyTest(TestCase):
             self.assertEqual(each.icv[1:], m_vector)
 
 
+class PCSetPropertyTest(TestCase):
+
+    def setUp(self):
+        self.a = PCSet([0, 2, 5, 7])
+        self.b = PCSet([5, 7, 8])
+        self.c = PCSet([1, 3, 4])
+
+    def testUnion(self):
+        self.assertEqual(self.a + self.c, self.a.union(self.c))
+
+    def testDifference(self):
+        self.assertEqual(self.a - self.b, self.a.difference(self.b))
+
+    def testSymmetricDifference(self):
+        self.assertEqual(self.a.symmetric_difference(self.b), PCSet([0, 2, 8]))
+
+    def testIntersection(self):
+        self.assertEqual(PCSet([5, 7]), self.a.intersection(self.b))
+
+    def testSymDiffIntersectionUnion(self):
+        sym_diff = self.a.symmetric_difference(self.b)
+        intersection = self.a.intersection(self.b)
+        self.assertEqual(sym_diff + intersection, self.a.union(self.b))
+
+    def testIsSubset(self):
+        self.assertTrue(self.a.issubset([0,2,5,7,8,9]))
+        self.assertFalse(self.a.issubset([0, 2]))
+
+    def testIsSuperset(self):
+        self.assertTrue(self.a.issuperset([5,7]))
+        self.assertFalse(self.a.issuperset(self.c))
+
+    def testIsDisjoint(self):
+        self.assertTrue(self.a.isdisjoint(self.a.literal_compliment))
+        self.assertTrue(self.a.isdisjoint(self.c))
+        self.assertFalse(self.a.isdisjoint(self.b))
+
+
 class EachTest(TestCase):
     """Methods that provide each n in the modulus or each set in the modulus"""
 

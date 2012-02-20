@@ -791,6 +791,89 @@ class PPCSetBase(SetRowBase):
         for sub in self.subsets(limit):
             yield PCSet(self.copy(utils.fromint(sub.pcint)))
 
+    class OnlySetableMethod(Exception):
+        """
+        Exception to raise if the argument used can not be made into a set
+        """
+        pass
+
+    def args_are_sets(f, *args, **kwargs):
+        """ Decorator to help with set methods. Ensures that args are sets"""
+        def _(*args, **kwargs):
+            ints = set()
+            for arg in args[1:]:
+                if isinstance(arg, (PCSet, PSet)):
+                    arg = arg._pc_set
+                    continue
+                if isinstance(arg, (list, tuple)):
+                    arg = set(arg)
+                    continue
+                if isinstance(arg, set):
+                    continue
+                err_msg = 'Only lists, tuples, sets, PSet, and PCSet objects can be used as arguments for this method'
+                raise args[0].OnlySetableMethod(err_msg)
+            return f(*args, **kwargs)
+        _.__doc__ = f.__doc__
+        _.__name__ = f.__name__
+        return _
+
+    @args_are_sets
+    def union(self, other):
+        """
+        Return a PCSet instance that represents the union of the current PSet
+        or PCSet and another as the first and only positional argument.
+        """
+        return self.copy(self._pc_set.union(other))
+
+    @args_are_sets
+    def intersection(self, other):
+        """
+        Return a PCSet instance that represents the intersection of the current
+        PSet or PCSet and another as the first and only positional argument.
+        """
+        return self.copy(self._pc_set.intersection(other))
+
+    @args_are_sets
+    def difference(self, other):
+        """
+        Return a PCSet instance that represents the difference of the current
+        PSet or PCSet and another as the first and only positional argument.
+        """
+        return self.copy(self._pc_set.difference(other))
+
+    @args_are_sets
+    def symmetric_difference(self, other):
+        """
+        Return a PCSet instance that represents the symmetric_difference of the
+        current PSet or PCSet and another as the first and only positional
+        argument.
+        """
+        return self.copy(self._pc_set.symmetric_difference(other))
+
+    @args_are_sets
+    def issubset(self, other):
+        """
+        Return True if the current PSet or PCSet is a subset of another object
+        taken as the first and only positional argument, otherwise False.
+        """
+        return self._pc_set.issubset(other)
+
+    @args_are_sets
+    def issuperset(self, other):
+        """
+        Return True if the current PSet or PCSet is a superset of another
+        object taken as the first and only positional argument, otherwise False
+        """
+        return self._pc_set.issuperset(other)
+
+    @args_are_sets
+    def isdisjoint(self, other):
+        """
+        Return True if the current PSet or PCSet is disjoint with another
+        object taken as the first and only positional argument, otherwise False
+        """
+        return self._pc_set.isdisjoint(other)
+
 
 class PCSet(PPCSetBase, PCBase):
     """
