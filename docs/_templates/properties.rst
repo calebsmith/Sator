@@ -76,6 +76,7 @@ These methods are related to the object's set-class and are therefore not availa
 * prime_operation - Returns a two tuple in the form of (n, m) which would transform the set into its prime form under TnMm using .t_m(n, m)
 * forte - Returns the Forte name of the set.
 * icv - Returns the interval class vector of the set. N.B. - The first integer represents the number of occurences of IC 0, which some texts omit.
+* ds - Returns the degrees of symmetry of the set. (The number of Tn/TnI operations for which the set is invariant)
 * mpartner - Returns an unordered PCSet instance, which is the M-partner of the current set, which is a PSet or PCSet.
 * zpartner - Returns an unordered PCSet instance, which is the Z-partner of the current set, which is a PSet or PCSet.
 * literal_compliment - Returns an unordered PCSet, which represents the literal compliment of the set

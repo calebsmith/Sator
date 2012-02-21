@@ -734,6 +734,18 @@ class PPCSetBase(SetRowBase):
         """
         return [(n, m) for n, m in self.each_tto() if self._transpose_multiply(n, m) == self]
 
+    @property
+    def ds(self):
+        """
+        Degrees of symmetry (number of Tn/TnI operations for which this set is
+        invariant)
+        """
+        total = 0
+        for m in (1, -1):
+            for n in self.each_n():
+                if self._transpose_multiply(n, m) == self:
+                    total += 1
+        return total
 
     def m_vector(self, m):
         """

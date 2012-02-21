@@ -165,6 +165,11 @@ class VectorPropertyTest(TestCase):
         self.assertEqual(inv_vector, [])
         self.assertEqual(PCSet(0, 6, 7, 8).invariance_vector, [(0, 1)])
 
+    def testDS(self):
+        self.assertEqual([tri.ds for tri in PCSet.each_prime_in_card_mod(3, 12)], [
+            2, 1, 1, 1, 1, 2, 1, 1, 2, 2, 1, 6
+        ])
+
     def testMVector(self):
         for each in PCSet.each_prime_in_card_mod(3, 12):
             m_vector = each.m_vector(2)
