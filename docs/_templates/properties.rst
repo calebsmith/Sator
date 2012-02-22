@@ -96,4 +96,4 @@ Pitch Set Only Properties and Methods
 
 The following properties are only available for PSet objects.
 
-* root - Determine the root of an ordered pitch set using Paul Hindemith's method. If the set is unordered, ascending order is the assumed voicing.
+* root - Determine the root(s) of an ordered pitch set using Paul Hindemith's method. Returns a list with one root, or multiple roots if the root is indeterminate. If the set is unordered, ascending order is the assumed voicing.
