@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from __future__ import division
-from itertools import count, izip, combinations
+from itertools import count, izip, combinations, permutations
 
 import utils
 from const import HIGH_PITCH_LIMIT, LOW_PITCH_LIMIT, Z_PARTNERS
@@ -107,12 +107,20 @@ class SetRowBase(object):
     def __repr__(self):
         return str(self.ppc)
 
-    def copy(self, pitches=None):
+    def __copy__(self):
+        return copy(self)
+
+    def copy(self, pitches=None, **kwargs):
         """Use to copy a ToneRow/PSet/PCSet with all data attributes."""
         if pitches is None:
             pitches = self.pitches
-        new = self.__class__(pitches, mod=self._mod, ordered=self._ordered,
-                             multiset=self._multiset)
+        new_kwargs = {
+            'mod': self._mod,
+            'ordered': self._ordered,
+            'multiset': self._multiset,
+        }
+        new_kwargs.update(kwargs or {})
+        new = self.__class__(pitches, **new_kwargs)
         if isinstance(self, PPCSetBase):
             new.canon(self._canon_t, self._canon_i, self._canon_m)
         new._default_m = self._default_m
@@ -248,6 +256,14 @@ class SetRowBase(object):
         for m in [1, -1, self._default_m, self._mod - self._default_m]:
             for n in self.each_n():
                 yield (n, m)
+
+    def each_permutation(self):
+        """
+        A generator that yields ordered objects that represent each
+        permutation of the given object.
+        """
+        for each in permutations(self[:]):
+            yield self.copy(each, ordered=True)
 
     def _transpose(self, sub_n=0):
         return self.copy(utils.transpose(self.pitches, sub_n))
@@ -914,6 +930,9 @@ class PSet(PPCSetBase):
 
     @property
     def root(self):
+        """
+        Find the root(s) of an ordered pitch set, using Paul Hindemith's method
+        """
         if self._mod != 12:
             raise self.Mod12Only('The modulus must be 12 for this method')
         if not self[:]:

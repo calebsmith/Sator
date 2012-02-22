@@ -11,6 +11,7 @@ All of the generator methods are prefaced by each, sub or super. Below is a brie
 * each_set - Yields each possible unordered set for the object's modulus
 * each_card - Yields each unordered set with the same cardinality as the object, for the object's modulus
 * each_prime - Yields each unique set-class for the object's modulus
+* each_permutation - Yields every possible ordered set or tone row of the given set or tone row.
 
 * subsets - Yields each subset of the given object (depth first)
 * subprimes - Yields the unique set-classes of the subsets of the given object

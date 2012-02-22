@@ -194,11 +194,13 @@ class PSetPropertyTest(TestCase):
 
     def testroot_order_invariant(self):
         # With major/minor triads, order is irrelavant
-        self.assertEqual(PSet(0, 4, 7, ordered=True).root, [0])
-        self.assertEqual(PSet(3, 7, 0, ordered=True).root, [0])
+        for perm in PSet(0, 3, 7).each_permutation():
+            self.assertEqual(perm.root, [0])
+        for perm in PSet(0, 4, 7).each_permutation():
+            self.assertEqual(perm.root, [0])
+        # Voicing should also be irrelavent
         self.assertEqual(PSet(4, 7, 12, ordered=True).root, [12])
-        self.assertEqual(PSet(7, 0, 3, ordered=True).root, [0])
-        self.assertEqual(PSet(7, 0, 4, ordered=True).root, [0])
+        self.assertEqual(PSet(7, 0, -9, ordered=True).root, [0])
         self.assertEqual(PSet(-8, 12, -5, ordered=True).root, [12])
 
     def testroot_order_variance(self):
