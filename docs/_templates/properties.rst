@@ -4,8 +4,7 @@
 Properties and Static Methods
 =============================
 
-Each property takes no arguments and does not require the () syntax for calling.
-The properties are grouped into categories below.
+The properties and methods are grouped into categories below.
 
 Static Methods
 --------------
@@ -31,6 +30,8 @@ For example::
 
 The static or class methods that are generators are described under :ref:`generators`
 
+Properties for TTO rotations
+
 Rotations
 ---------
 * t_rotations - A list of objects representing each possible transposition of the given object
@@ -52,13 +53,13 @@ These property methods have a limited meaning for ToneRow objects and are only a
 
 These methods take one positional argument, which can be any of PSet, PCSet, list, tuple, or set and return a PCSet or boolean as appropriate.
 They mimic the Python built-in set methods of the same name. In the description, A is used to denote the current object, and B is the object that is passed in as an argument.
-* union - The union of the two objects. The resulting object has all of the elements of both. (A or B)
-* intersection - The intersection of the two objects. The resulting object has only the elements that are in both. (A and B)
-* difference - The difference of the two objects. The resulting object has the elements of A, excepting those in B.
-* symmetric_difference - The symmetric difference of the two objects. The resulting object has all of the elements of A, excepting those in B, as well as all of the elements of B, excepting those in A.
-* issuperset - Returns True if the current object is a superset of the argument object, otherwise False
-* issubset - Returns True if the current object is a subset of the argument object, otherwise False
-* isdisjoint - Returns True if the current object and argument object are disjoin, otherwise False
+* union(other) - The union of the two objects. The resulting object has all of the elements of both. (A or B)
+* intersection(other) - The intersection of the two objects. The resulting object has only the elements that are in both. (A and B)
+* difference(other) - The difference of the two objects. The resulting object has the elements of A, excepting those in B.
+* symmetric_difference(other) - The symmetric difference of the two objects. The resulting object has all of the elements of A, excepting those in B, as well as all of the elements of B, excepting those in A.
+* issuperset(other) - Returns True if the current object is a superset of the argument object, otherwise False
+* issubset(other) - Returns True if the current object is a subset of the argument object, otherwise False
+* isdisjoint(other) - Returns True if the current object and argument object are disjoin, otherwise False
 
 It is worthwhile to note that the behavior of some of these methods are duplicated elsewhere and that they are included here for ease of use with other set methods.
 The following methods have the same behavior as the method they are listed with:
@@ -70,7 +71,7 @@ The following methods have the same behavior as the method they are listed with:
 Set-Class
 ---------
 
-These methods are related to the object's set-class and are therefore not available to ToneRow objects.
+These properties are related to the object's set-class and are therefore not available to ToneRow objects, since all tone rows have the same set-class, which is the aggregate of the given modulus.
 
 * prime - The set in prime form. (Use the canon method to change the canonical operators used.)
 * prime_operation - Returns a two tuple in the form of (n, m) which would transform the set into its prime form under TnMm using .t_m(n, m)
@@ -87,5 +88,12 @@ Non-TTO transformations
 
 The following non-TTO transformations are available for PCSet objects only
 
-* c - Change the given object in place to its literal compliment
-* z - Change the given object in place to its z-partner
+* c() - Change the given object in place to its literal compliment
+* z() - Change the given object in place to its z-partner
+
+Pitch Set Only Properties and Methods
+-------------------------------------
+
+The following properties are only available for PSet objects.
+
+* root - Determine the root of an ordered pitch set using Paul Hindemith's method. If the set is unordered, ascending order is the assumed voicing.

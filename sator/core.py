@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import division
 from itertools import count, izip, combinations
 
 import utils
@@ -768,7 +769,6 @@ class PPCSetBase(SetRowBase):
                        for pcint, total in vectors.items()],
                        key = lambda x: x[0].pcint)
 
-
     def supersets(self, limit=0):
         """
         Yields the supersets of the given object. Takes an optional argument,
@@ -908,7 +908,39 @@ class PCSet(PPCSetBase, PCBase):
 
 class PSet(PPCSetBase):
     """A class for pitch sets, which adds pitch set only methods."""
-    pass
+
+    class Mod12Only(Exception):
+        pass
+
+    @property
+    def root(self):
+        if self._mod != 12:
+            raise self.Mod12Only('The modulus must be 12 for this method')
+        if not self[:]:
+            return []
+        totals = {}
+        for p in self[:]:
+            totals[p] = 0
+        for each in combinations(self[:], 2):
+            diff = abs(each[1] - each[0]) % self._mod
+            # Ignore tritones.
+            if diff == 6:
+                continue
+            rating = diff if diff < self._mod // 2 else self._mod - diff
+            # The root of these three is the lower note, otherwise higher
+            lower, higher = (0, 1) if each[1] > each[0] else (1, 0)
+            key = each[lower] if diff in [7, 4, 3] else each[higher]                
+            totals[key] = rating + totals.get(key, 0)
+        # Sort by rating descending and truncate
+        totals = sorted(totals.items(), key= lambda x: x[1])
+        totals.reverse()
+        current = totals[0][1]
+        for index, total in enumerate(totals):
+            if total[1] < current:
+                index -= 1
+                break
+            current = total[1]
+        return sorted([total[0] for total in totals[0:index + 1]])
 
 
 class InvalidTTO(Exception):

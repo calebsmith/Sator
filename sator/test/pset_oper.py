@@ -177,6 +177,35 @@ class VectorPropertyTest(TestCase):
             self.assertEqual(each.icv[1:], m_vector)
 
 
+class PSetPropertyTest(TestCase):
+
+    def testroot_obvious(self):
+        a = PSet(0, 3, 7)
+        for tn in a.t_rotations:
+            self.assertEqual(tn.root, [tn[0]])
+        a = PSet(0, 4, 7)
+        for tn in a.t_rotations:
+            self.assertEqual(tn.root, [tn[0]])
+
+    def testroot_many(self):
+        self.assertEqual(PSet(0, 3, 6, 9).root, [0, 3, 6, 9])
+        self.assertEqual(PSet(-4, 0, 4).root, [-4, 0, 4])
+        self.assertEqual(PSet(0, 2, 7).root, [0, 7])
+
+    def testroot_order_invariant(self):
+        # With major/minor triads, order is irrelavant
+        self.assertEqual(PSet(0, 4, 7, ordered=True).root, [0])
+        self.assertEqual(PSet(3, 7, 0, ordered=True).root, [0])
+        self.assertEqual(PSet(4, 7, 12, ordered=True).root, [12])
+        self.assertEqual(PSet(7, 0, 3, ordered=True).root, [0])
+        self.assertEqual(PSet(7, 0, 4, ordered=True).root, [0])
+        self.assertEqual(PSet(-8, 12, -5, ordered=True).root, [12])
+
+    def testroot_order_variance(self):
+        self.assertEqual(PSet(0, 7, 9, 14, ordered=True).root, [14])
+        self.assertEqual(PSet(2, 9, 12, 19, ordered=True).root, [12, 19])
+
+
 class PCSetPropertyTest(TestCase):
 
     def setUp(self):
