@@ -928,13 +928,49 @@ class PSet(PPCSetBase):
     class Mod12Only(Exception):
         pass
 
+    class NotNeoR(Exception):
+        """Can not be transformed by a Neo-Riemannian operator"""
+        pass
+
+    def checkMod12(f):
+        def _(*args, **kwargs):
+            self = args[0]
+            if self._mod != 12:
+                raise self.Mod12Only('The modulus must be 12 for this method')
+            return f(*args, **kwargs)
+        _.__name__ = f.__name__
+        _.__module__ = f.__module__
+        _.__doc__ = f.__doc__
+        return _
+
+    def neo_oper(f):
+        def _(*args, **kwargs):
+            self = args[0]
+            roots = self.root
+            unique_roots = set((root % self._mod for root in roots))
+            if len(roots) == 0 or len(unique_roots) > 1:
+                return f(self)
+            try:
+                thirds, major = self._thirds(roots[0])
+            except self.NotNeoR:
+                return f(self)
+            try:
+                fifths = self._fifths(roots[0])
+            except self.NotNeoR:
+                return f(self)
+            root_indexes = [index for index, p in enumerate(self[:]) if p in roots]
+            return f(self, major, root_indexes, thirds, fifths, *args[1:], **kwargs)
+        _.__name__ = f.__name__
+        _.__module__ = f.__module__
+        _.__doc__ = f.__doc__
+        return _
+
     @property
+    @checkMod12
     def root(self):
         """
         Find the root(s) of an ordered pitch set, using Paul Hindemith's method
         """
-        if self._mod != 12:
-            raise self.Mod12Only('The modulus must be 12 for this method')
         if not self[:]:
             return []
         totals = {}
@@ -960,6 +996,88 @@ class PSet(PPCSetBase):
                 break
             current = total[1]
         return sorted([total[0] for total in totals[0:index + 1]])
+
+    def _thirds(self, root):
+        root_pc = root % self._mod
+        thirds = []
+        major = None
+        for index, pc in enumerate(self.pcs):
+            if pc == root_pc + 3 or pc == root_pc - 9:
+                major = False
+                thirds.append((index, major))
+            if pc == root_pc + 4 or pc == root_pc - 8:
+                major = True
+                thirds.append((index, major))
+        if len(thirds) < 1:
+            raise self.NotNeoR('There is no identifiable third.')
+        majors = [major for third, major in thirds]
+        if True in majors and False in majors:
+            raise self.NotNeoR('There are major and minor thirds.')
+        return([third for third, major in thirds], major)
+
+    def _fifths(self, root):
+        root_pc = root % self._mod
+        fifths = []
+        for index, pc in enumerate(self.pcs):
+            if pc == root_pc + 7 or pc == root_pc - 5:
+                fifths.append(index)
+        if len(fifths) < 1:
+            raise self.NotNeoR('There is no identifiable fifth.')
+        return fifths
+
+    @checkMod12
+    @neo_oper
+    def P(self, *args):
+        if not args:
+            return self.copy()
+        major, roots, thirds, fifths = args[:4]
+        new = self.copy()
+        for third in thirds:
+            new[third] = new.pitches[third] - 1 \
+                if major else new.pitches[third] + 1
+        return new
+
+    @checkMod12
+    @neo_oper
+    def L(self, *args):
+        if not args:
+            return self.copy()
+        major, roots, thirds, fifths = args[:4]
+        new = self.copy()
+        if major:
+            for root in roots:
+                new[root] = new.pitches[root] - 1
+        else:
+            for fifth in fifths:
+                new[fifth] = new.pitches[fifth] + 1
+        return new
+
+    @checkMod12
+    @neo_oper
+    def R(self, *args):
+        if not args:
+            return self.copy()
+        major, roots, thirds, fifths = args[:4]
+        new = self.copy()
+        if major:
+            for fifth in fifths:
+                new[fifth] = new.pitches[fifth] + 2
+        else:
+            for root in roots:
+                new[root] = new.pitches[root] - 2
+        return new
+
+    def H(self):
+        """Hexatonic Pole (Cohn)"""
+        return self.P().L().P()
+
+    def N(self):
+        """Nebenverwandt"""
+        return self.R().L().P()
+
+    def S(self):
+        """Slide"""
+        return self.L().P().R()
 
 
 class InvalidTTO(Exception):
