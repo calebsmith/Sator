@@ -125,13 +125,19 @@ class SetRowBase(object):
         new._default_m = self._default_m
         return new
 
+    class InvalidModulus(Exception):
+        pass
+
     def mod(self, new_mod=None):
         """
         Takes one argument as the new modulus of the system.
         Without an argument, returns the current modulus.
         """
-        if new_mod:
-            self._mod = new_mod
+        if new_mod is not None:
+            if new_mod > 0 and new_mod < 32:
+                self._mod = new_mod
+            else:
+                raise self.InvalidModulus('The modulus must be > 0 and < 32')
         else:
             return self._mod
 

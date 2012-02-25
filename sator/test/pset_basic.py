@@ -393,6 +393,10 @@ class SettingsTest(TestCase):
         self.assertEqual(self.pcset._mod, 7)
         self.assertEqual(self.pset._mod, 13)
 
+    def testModInvalid(self):
+        for n in [0, 32]:
+            self.assertRaises(self.pcset.InvalidModulus, self.pcset.mod, n)
+
     def testCanon(self):
         a = self.pcset
         b = self.pset
