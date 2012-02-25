@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 from unittest import TestCase, main
 
-from sator.core import PPCSetBase, PCSet, PSet
+from sator.setbase import SetBase
+from sator.core import PCSet, PSet
 
 
 """Test PCSet/PSet class overrides"""
@@ -73,7 +74,7 @@ class AddTests(TestCase):
         self.s = set(self.l)
 
     def testaddInt(self):
-        a = PPCSetBase() + self.i
+        a = SetBase() + self.i
         self.assertEqual(a, self.i)
 
     def testaddList(self):
@@ -90,9 +91,9 @@ class AddTests(TestCase):
         self.assertEqual(a, self.s)
 
     def testaddPPCSetTypes(self):
-        a = PPCSetBase([0, 1])
-        b = PPCSetBase([2, 3])
-        c = PPCSetBase()
+        a = SetBase([0, 1])
+        b = SetBase([2, 3])
+        c = SetBase()
         c = a + b
         self.assertEqual(c, PSet([0, 1, 2, 3]))
         self.assertEqual(c, PCSet([0, 1, 2, 3]))
