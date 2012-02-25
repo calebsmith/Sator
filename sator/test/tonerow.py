@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from unittest import TestCase, main
 
-from core import ToneRow
+from sator.core import ToneRow
 
 
 class ToneRowTests(TestCase):        

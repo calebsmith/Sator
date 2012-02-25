@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 from unittest import TestCase, main
 
-from core import PCSet, PSet
-import utils
-from const import Z_PARTNERS
+from sator.core import PCSet, PSet
+import sator.utils as utils
+from sator.const import Z_PARTNERS
 
 class PrimeTestCase(TestCase):        
     def setUp(self):

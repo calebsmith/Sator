@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 from unittest import TestCase, main
 
-from core import PCSet, PSet
-import utils
+from sator.core import PCSet, PSet
+import sator.utils as utils
 
 
 """Test pc and set methods"""

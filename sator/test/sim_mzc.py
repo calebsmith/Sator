@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 from unittest import TestCase, main
 
-from core import PCSet, PSet
-from sim import *
+from sator.core import PCSet, PSet
+from sator.sim import *
 
 class SimMZCTests(TestCase):        
     def setUp(self):

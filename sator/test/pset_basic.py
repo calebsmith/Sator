@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 from unittest import TestCase, main
 
-from core import PPCSetBase, PCSet, PSet
-import utils
+from sator.core import PPCSetBase, PCSet, PSet
 
 
 """Test PCSet/PSet class overrides"""
