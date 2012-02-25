@@ -97,3 +97,46 @@ Pitch Set Only Properties and Methods
 The following properties are only available for PSet objects.
 
 * root - Determine the root(s) of an ordered pitch set using Paul Hindemith's method. Returns a list with one root, or multiple roots if the root is indeterminate. If the set is unordered, ascending order is the assumed voicing.
+
+Neo-Riemannian Transformations
+------------------------------
+
+Neo-Riemannian transformations and their related methods are only available for PSet objects.
+The following methods return new PSet instances, modified by the appropriate Neo-Riemannian Transformation. If the root, third, and fifth can not be found, or there are more than one, the given set is returned unmodified.
+These transformations preserve order and change only one pitch by one or two semitones (depending on the transformation)
+N.B. - While all major/minor triads are supported for all transformations, other trichords or sets with other cardinalities may give unexpected results. The only requirements are that the set has a modulus of 12, and a determinate root, third and fifth.
+
+* P() - Parallel (C major becomes C minor)
+* R() - Relative (C major becomes A minor)
+* L() - Leading-Tone or "Leittonwechsel" (C major becomes E minor)
+
+Composite transformations (i.e. transformations created by performing P, L, or R )
+
+* S() - Slide (C major becomes Db minor) - equivalent to L().P().R()
+* N() - Nebenverwandt (C major becomes F minor) - equivalent to R().L().P()
+* H() - Hexatonic Pole - from Richard Cohn (C major becomes Ab minor) - equivalent to L().P().L() or P().L().P()
+
+All Neo-Riemannian Transformations are involutions and are equivalent to a TnI operation, though order is preserved.
+The following methods are not transformations but are available for working with Neo-Riemannian transformations:
+
+* neo(string) - A generator that takes string input and yields the resulting set after each transformation. The input string is not case-sensitive and characters other than p, l, r, n, h, and s are ignored.
+* cycle(string) - A generator that performs neo successively until the original set is reached. In this way .cycle("plr") would generate the PLR cycle.
+
+This brief example shows the use of each of these helper methods::
+
+    a = PSet(0, 4, 7)
+    for each in a.neo("plpr"):
+        print each
+    Out: [0, 3, 7]
+         [0, 3, 8]
+         [-1, 3, 8]
+         [-1, 3, 6]
+
+    for each in a.cycle("pl"):
+        print each
+    Out: [0, 3, 7]
+         [0, 3, 8]
+         [-1, 3, 8]
+         [-1, 4, 8]
+         [-1, 4, 7]
+         [0, 4, 7]
