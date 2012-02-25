@@ -4,4 +4,5 @@ __all__ = [
     'pset_prime',
     'tonerow',
     'sim_mzc',
+    'neo_r',
 ]

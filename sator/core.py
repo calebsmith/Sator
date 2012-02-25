@@ -386,14 +386,12 @@ class ToneRow(SetRowBase, PCBase):
     @property
     def P(self):
         """Returns the prime of the ToneRow"""
-        return self
+        return self.copy()
 
     @property
     def R(self):
         """Returns the retrograde of the ToneRow"""
-        ppc = self.ppc
-        ppc.reverse()
-        return self.copy(ppc)
+        return self.copy(list(reversed(self.ppc)))
 
     @property
     def I(self):
@@ -1078,6 +1076,49 @@ class PSet(PPCSetBase):
     def S(self):
         """Slide"""
         return self.L().P().R()
+
+    def neo(self, ts):
+        if not isinstance(ts, str):
+            raise Exception('Neo method only accepts a string')
+        ts = ts.lower()
+        new = self.copy()
+        for t in ts:
+            if t == 'p':
+                new = new.P()
+                yield new
+            if t == 'l':
+                new = new.L()
+                yield new
+            if t == 'r':
+                new = new.R()
+                yield new
+            if t == 's':
+                new = new.S()
+                yield new
+            if t == 'n':
+                new = new.N()
+                yield new
+            if t == 'h':
+                new = new.H()
+                yield new
+
+    def cycle(self, ts):
+        """
+        Cycle through a list of transformations until the 
+        """
+        if not isinstance(ts, str):
+            raise Exception('Cycle method only accepts a string')
+        ts = ts.lower()
+        current = self.copy()
+        while True:
+            for each in self.neo(ts):
+                self[:] = each
+                yield each
+                if each.uo_pcs == current.uo_pcs:
+                    self[:] = current
+                    break
+            if self[:] == current:
+                break
 
 
 class InvalidTTO(Exception):
