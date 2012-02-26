@@ -46,6 +46,9 @@ However, if a pitch collection contains different pitches of the same pitch clas
     print c == a
     Out: False
 
+Because preservation of pitch data is not guaranteed casting objects from PSet to PCSet and back to PSet, is not recommended.
+PCSet objects have pitch class only methods such as the Mm TTO, while PSet objects contain pitch set only methods, such as finding the root.
+
 ToneRows can also be instantiated from PSet or PCSet instances, but they must have each possible pitch class given the modulus of the object.
 When instantiating a new ToneRow with a modulus other than 12, it must be specified as a kwarg as in the following example::
 

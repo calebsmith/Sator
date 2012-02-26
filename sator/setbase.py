@@ -2,7 +2,7 @@
 from itertools import count, izip, combinations
 
 import sator.utils as utils
-from const import HIGH_PITCH_LIMIT, LOW_PITCH_LIMIT, Z_PARTNERS
+from const import Z_PARTNERS
 
 from sator.setrowbase import SetRowBase, PCBase
 
@@ -40,7 +40,7 @@ class SetBase(SetRowBase):
             pitches.extend(self.pitches[place:])
             self[:] = pitches
         except IndexError:
-            self.pitches.append(pitch)
+            self[:].append(pitch)
 
     def clear(self):
         """Remove all pitches/pitch classes from the object."""

@@ -2,9 +2,6 @@
 from __future__ import division
 from itertools import combinations
 
-import sator.utils as utils
-from sator.const import HIGH_PITCH_LIMIT, LOW_PITCH_LIMIT
-
 from sator.setbase import SetBase
 
 

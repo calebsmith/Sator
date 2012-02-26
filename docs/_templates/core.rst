@@ -1,7 +1,20 @@
 Core module Index
 =================
 
-.. automodule:: sator.core
+
+.. automodule:: sator.setrowbase
+    :members:
+
+.. automodule:: sator.setbase
+    :members:
+
+.. automodule:: sator.pset
+    :members:
+
+.. automodule:: sator.pcset
+    :members:
+
+.. automodule:: sator.tonerow
     :members:
 
 .. autofunction:: sator.core.transpose

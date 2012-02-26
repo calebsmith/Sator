@@ -1,9 +1,4 @@
 #!/usr/bin/env python
-from __future__ import division
-from itertools import count, izip, combinations, permutations
-
-import utils
-from const import HIGH_PITCH_LIMIT, LOW_PITCH_LIMIT, Z_PARTNERS
 
 from sator.setrowbase import SetRowBase, PCBase
 

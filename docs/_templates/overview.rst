@@ -25,7 +25,7 @@ To instantiate an empty pitch set, or pitch class set, use::
 * ToneRow objects are excluded from the above example because by definition, they cannot be empty.
 
 The classes' constructors take an optional number of positional arguments as pitches or pc's.
-These arguments can be integers, lists, tuples, or another ToneRow, PCSet, or PSet object.
+These arguments can be integers, lists, tuples, sets of integers, or another ToneRow, PCSet, or PSet object.
 Any of the following are both valid and equivalent::
 
     a = PSet([0, 2, 4, 6, 8])
@@ -36,6 +36,10 @@ Any of the following are both valid and equivalent::
 The constructors also take several optional keyword arguments. For further details, refer to :ref:`constructor_options`
 
 For more information about how pitch/pitch class data is stored and retrieved and how to instantiate objects from objects of other classes refer to :ref:`data_inspection`
+Casting objects from PSet, PCSet, or ToneRow to another works as expected, but it is not recommened to cast in both directions arbitrarily as data may be lost. Refer to "data inspection" above for more details.
+
+While PSet objects contain pitch data, it is neccessary and desirable to have upper and lower limits. Rahn numbers are assumed, and pitches may be within 10 octaves of C4 (e.g. Rahn number 0).
+A PSet with pitches outside of this range will have the octave of the offending pitches reduced or raised 10 octaves appropriately.
 
 Operating on Tone Row and Pitch/Pitch Class objects
 ---------------------------------------------------

@@ -2,13 +2,11 @@
 from itertools import permutations
 
 import sator.utils as utils
-from sator.const import HIGH_PITCH_LIMIT, LOW_PITCH_LIMIT
-
+from sator.const import MAX_OCTAVE
 
 class SetRowBase(object):
     """Base class for PC/pitch sets and tone rows"""
 
-    #TODO: limit pitches to within PITCH_LIMIT bounds
     pitches = []
     _mod = 12
     _default_m = 5
@@ -23,16 +21,20 @@ class SetRowBase(object):
         self.ordered(ordered)
         multiset = kwargs.pop('multiset', self._multiset)
         self.multiset(multiset)
-        self.pitches = []
-        if len(args) == 1:
-            self.pitches = self.__add__(args[0], internal=True)
-        elif len(args) > 1:
-            result = []
-            for arg in args:
-                result += self.__add__(arg, internal=True)
-            self.pitches = result
+        self[:] = []
+        results = []
+        for arg in args:
+            results += self.__add__(arg, internal=True)
+        # Limit the pitches to within max_octave octaves from 0
+        new_results = []
+        for result in results:
+            new = abs(result) % (MAX_OCTAVE * self.mod())
+            if result < 0:
+                new = new * -1
+            new_results.append(new)
+        self.pitches = new_results
         if not self._multiset:
-            self.pitches = self._rm_dupes(self.pitches)
+            self[:] = self._rm_dupes(self.pitches)
 
     def __add__(self, other, **kwargs):
         internal = kwargs.get('internal', False)
@@ -45,7 +47,7 @@ class SetRowBase(object):
             ps = list(other)
         if isinstance(other, set):
             ps = [int(num) for num in other]
-        ps = self.pitches[:] + ps
+        ps = self.pitches + ps
         if not self._multiset:
             ps = self._rm_dupes(ps)
         # If initializing, returning an instance creates infinite recursion
@@ -94,6 +96,11 @@ class SetRowBase(object):
             return self.copy(l)
 
     def __setitem__(self, key, value):
+        if isinstance(value, (int, long)):
+            new = abs(value) % (MAX_OCTAVE * self.mod())
+            if value < 0:
+                new = new * -1
+            value = new
         self.pitches[key] = value
 
     def __iter__(self):

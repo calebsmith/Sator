@@ -12,7 +12,8 @@ Mod
 
 mod([modulus])
 
-Sets the modulus of the object to modulus. Without a modulus, the current modulus is returned
+Sets the modulus of the object to modulus. Without an argument, the current modulus is returned.
+The modulus must be greater than 0 and less than 32. Other values will raise an InvalidModulus exception.
 
 Default_m
 ---------
