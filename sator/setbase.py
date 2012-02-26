@@ -122,7 +122,7 @@ class SetBase(SetRowBase):
 
     @classmethod
     def each_set_in_mod(cls, mod):
-        return(cls(utils.fromint(integer)) for integer in xrange(0, 2 ** mod))
+        return(cls(utils.fromint(integer), mod=mod) for integer in xrange(0, 2 ** mod))
 
     @classmethod
     def each_prime_in_mod(cls, mod):
@@ -134,7 +134,7 @@ class SetBase(SetRowBase):
         Same as the instance method but takes two args for cardinality and
         modulus respectively
         """
-        return (cls(each) for each in combinations(cls.each_n_in_mod(mod), card))
+        return (cls(each, mod=mod) for each in combinations(cls.each_n_in_mod(mod), card))
 
     @classmethod
     def each_prime_in_card_mod(cls, card, mod):
@@ -143,8 +143,9 @@ class SetBase(SetRowBase):
         modulus
         """
         for each in combinations(cls.each_n_in_mod(mod), card):
-            if cls(each).prime == cls(each):
-                yield cls(each)
+            new = cls(each, mod=mod)
+            if new.prime == new:
+                yield new
 
     @property
     def cardinality(self):
@@ -309,8 +310,6 @@ class SetBase(SetRowBase):
         Property that returns the Z-partner of the given object if it exists,
         otherwise returns None.
         """
-        if self._mod > 12:
-            return None
         if self._mod == 12:
             zint = Z_PARTNERS.get(self.pcint, None)
             if zint:

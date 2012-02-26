@@ -209,10 +209,7 @@ class GetItemTest(TestCase):
         self.assertEqual(self.pcset[-1], [11])
 
     def testgetAfter(self):
-        try:
-            self.pcset[100]
-        except IndexError:
-            assert True
+        self.assertRaises(IndexError, self.pcset.__getitem__, 100)
 
 
 class SequenceTest(TestCase):

@@ -278,6 +278,11 @@ class EachTest(TestCase):
         self.assertEqual(each_set[0:3], [[], [0], [1]])
         self.assertEqual(each_set[-1], [0, 1, 2, 3])
 
+    def testEach_set_in_mod(self):
+        for each in PCSet.each_set_in_mod(10):
+            self.assertEqual(each.mod(), 10)
+        self.assertEqual(each, list(xrange(0, 10)))
+
     def testEach_tto(self):
         def check_each_tto(mod):
             a = PCSet(0, 3, mod=mod)
@@ -293,11 +298,12 @@ class EachTest(TestCase):
 
     def testEach_card(self):
         card = 2
-        mod = 12
+        mod = 13
         a = PCSet(range(0, card), mod=mod)
         aggregate = PCSet(range(0, mod), mod=mod)
         for each, each_static in zip(a.each_card(), PCSet.each_card_in_mod(card, mod)):
             self.assertEqual(each.cardinality, card)
+            self.assertEqual(each.mod(), mod)
             self.assertEqual(each._pc_set.issubset(aggregate), True)
 
     def testEach_prime_in_card_mod(self):
@@ -315,6 +321,7 @@ class EachTest(TestCase):
             [0, 3, 7],
             [0, 4, 8],
         ]
-        for each in PCSet.each_prime_in_card_mod(3, 12):
+        for each in PCSet.each_prime_in_card_mod(3, 13):
+            self.assertEqual(each.mod(), 13)
             trichords.remove(each)
         self.assertEqual(trichords, [])

@@ -12,19 +12,17 @@ class NeoRTest(TestCase):
     def setUp(self):
         self.a = PSet(0, 4, 7, ordered=True, multiset=True)
 
+    def testMod12Required(self):
+        a = self.a.copy()
+        a.mod(11)
+        self.assertRaises(a.Mod12Only, a.P)
+        self.assertRaises(a.Mod12Only, a.L)
+        self.assertRaises(a.Mod12Only, a.R)
+
     def testP(self):
         a = self.a
         # P() is an involution
         self.assertEqual(a.P().P(), a)
-        # Mod 12 required
-        try:
-            a.mod(11)
-            a.P()
-        except a.Mod12Only:
-            pass
-        else:
-            self.assertTrue(False)
-        a.mod(12)
         self.assertEqual(a.P(), [0, 3, 7])
         self.assertEqual((a + [0, 4, 4, 0, 7]).P(), [0, 3, 7, 0, 3, 3, 0, 7])
         a.i(8)
@@ -35,15 +33,6 @@ class NeoRTest(TestCase):
         a = self.a
         # R() is an involution
         self.assertEqual(a.R().R(), a)
-        # Mod 12 required
-        try:
-            a.mod(11)
-            a.R()
-        except a.Mod12Only:
-            pass
-        else:
-            self.assertTrue(False)
-        a.mod(12)
         self.assertEqual(a.R(), [0, 4, 9])
         self.assertEqual((a + [0, 4, 4, 0, 7]).R(), [0, 4, 9, 0, 4, 4, 0, 9])
         a.i(1)
@@ -54,15 +43,6 @@ class NeoRTest(TestCase):
         a = self.a
         # L() is an involution
         self.assertEqual(a.L().L(), a)
-        # mod 12 required
-        try:
-            a.mod(11)
-            a.L()
-        except a.Mod12Only:
-            pass
-        else:
-            self.assertTrue(False)
-        a.mod(12)
         self.assertEqual(a.L(), [-1, 4, 7])
         self.assertEqual((a + [0, 4, 4, 0, 7]).L(), [-1, 4, 7, -1, 4, 4, -1, 7])
         a.i(5)

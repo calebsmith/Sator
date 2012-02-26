@@ -11,12 +11,7 @@ class ToneRowTests(TestCase):
 
     def testInit(self):
         # Make sure exception is thrown if args < mod
-        try:
-            tonerow = ToneRow([0])
-        except ToneRow.IncompleteToneRow:
-            self.assertTrue(True)
-        else:
-            self.assertTrue(False)
+        self.assertRaises(self.tonerow.IncompleteToneRow, ToneRow, [0])
         valid_tr = ToneRow(0, 1, 2, mod=3)
         self.assertTrue(valid_tr)
 
