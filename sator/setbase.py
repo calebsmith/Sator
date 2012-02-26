@@ -2,7 +2,7 @@
 from itertools import count, izip, combinations
 
 import sator.utils as utils
-from const import Z_PARTNERS
+from sator.const import Z_PARTNERS
 
 from sator.setrowbase import SetRowBase, PCBase
 

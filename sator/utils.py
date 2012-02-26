@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from const import FORTE_NAMES, FORTE_INTS
+from sator.const import FORTE_NAMES, FORTE_INTS
 
 def transpose(pitches, sub_n=0):
     """
