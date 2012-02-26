@@ -167,31 +167,37 @@ class PSet(SetBase):
     def neo(self, ts):
         if not isinstance(ts, str):
             raise Exception('Neo method only accepts a string')
-        ts = ts.lower()
+        ts = ts.upper()
         new = self.copy()
+
+        def get_funcs(obj):
+            fs = [obj.P, obj.L, obj.R, obj.H, obj.N, obj.S]
+            return fs, [f.__name__ for f in fs]
+
+        fs, fnames = get_funcs(self)
         for t in ts:
-            if t == 'p':
-                new = new.P()
+            if t in fnames:
+                new = fs[fnames.index(t)]()
                 yield new
-            if t == 'l':
-                new = new.L()
-                yield new
-            if t == 'r':
-                new = new.R()
-                yield new
-            if t == 's':
-                new = new.S()
-                yield new
-            if t == 'n':
-                new = new.N()
-                yield new
-            if t == 'h':
-                new = new.H()
-                yield new
+                fs, fnames = get_funcs(new)
+
+    def transform(self, ts):
+        """
+        Returns the given object after performing the list of transformations
+        given as a string argument.
+        If the string is empty, the given object is returned.
+        """
+        if not isinstance(ts, str):
+            raise Exception('Transform method only accepts a string')
+        t = None
+        for t in self.neo(ts):
+            pass
+        return t if t is not None else self.copy()
 
     def cycle(self, ts):
         """
-        Cycle through a list of transformations until the 
+        Cycle through a list of transformations until the original set is
+        reached.
         """
         if not isinstance(ts, str):
             raise Exception('Cycle method only accepts a string')
@@ -201,8 +207,45 @@ class PSet(SetBase):
             for each in self.neo(ts):
                 self[:] = each
                 yield each
-                if each.uo_pcs == current.uo_pcs:
+                if each._unique_pcs == current._unique_pcs:
                     self[:] = current
                     break
             if self[:] == current:
                 break
+
+    def paths(self, other):
+        """
+        A breadth first tree search to find the shortest path(s) from the given
+        object to another. Takes one argument as the goal set, returns a list
+        with one or more strings indicating the transformations between the
+        given set and the goal set.
+        """
+        # Verify that other is a transformation of self
+        current = other.copy()
+        current.canon(True, True, False)
+        if self.prime != current.prime:
+            raise self.NotNeoR('Neo Riemannian operations will never transform this set into the goal set.')
+
+        # Make branches from the curret node following P, L and R
+        def get_branches(obj):
+            return ((f(), f) for f in (obj.P, obj.L, obj.R))
+
+        # Make a tree with keys p, l, and r and values P(), L(), and R()
+        tree = {}
+        for branch, f in get_branches(self):
+            tree[f.__name__] = branch
+
+        def prune_append(obj, tree, first=True):
+            # return paths when goal is reached, otherwise prune current ones
+            # and append the next transformation, then check again
+            if not first:
+                # Only prune after the first time through
+                for name in tree.keys():
+                    obj = tree.pop(name)
+                    for branch, f in get_branches(obj):
+                        tree[name + f.__name__] = branch
+            paths = [name for name, obj in tree.items() \
+                     if obj._pc_set == other._pc_set]
+            return paths if paths else prune_append(other, tree, first=False)
+
+        return prune_append(self, tree)

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import random
 from unittest import TestCase, main
 
 from sator.core import PCSet, PSet
@@ -84,3 +85,32 @@ class NeoRTest(TestCase):
     def testCycleInvalid(self):
         self.assertEqual(list(self.a.cycle("foo")), [])
         self.assertEqual(list(self.a.cycle("fooL")), [[-1, 4, 7], [0, 4, 7]])
+
+    def testTransform(self):
+        # 'z' Added to make sure invalid names are ignored
+        fs = ['p', 'l', 'r', 'h', 's', 'n', 'z']
+        opers = ""
+        while len(opers) < 10:
+            opers += random.choice(fs)
+            neos = list(self.a.neo(opers))
+            if neos:
+                self.assertEqual(neos[-1], self.a.transform(opers))
+
+    def testPaths(self):
+        self.assertEqual(set(self.a.paths(self.a)), set(['PP', 'LL', 'RR']))
+        fs = ['p', 'l', 'r', 'z']
+        opers = ""
+        for n in xrange(0, random.randint(0, 10)):
+            opers += random.choice(fs)
+        paths = self.a.paths(self.a.transform(opers))
+        path = random.choice(paths)
+        self.assertEqual(self.a.transform(opers)._pc_set, self.a.transform(path)._pc_set)
+        b = self.a.copy()
+        b.i(random.randint(0, 12))
+        self.assertTrue(self.a.paths(b))
+        b.i(random.randint(0, 12))
+        self.assertTrue(self.a.paths(b))
+
+    def testPathsInvalid(self):
+        b = PSet([0, 3, 4, 7]) # Two thirds present
+        self.assertRaises(PSet.NotNeoR, self.a.paths, b)

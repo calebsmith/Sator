@@ -53,6 +53,7 @@ These property methods have a limited meaning for ToneRow objects and are only a
 
 These methods take one positional argument, which can be any of PSet, PCSet, list, tuple, or set and return a PCSet or boolean as appropriate.
 They mimic the Python built-in set methods of the same name. In the description, A is used to denote the current object, and B is the object that is passed in as an argument.
+
 * union(other) - The union of the two objects. The resulting object has all of the elements of both. (A or B)
 * intersection(other) - The intersection of the two objects. The resulting object has only the elements that are in both. (A and B)
 * difference(other) - The difference of the two objects. The resulting object has the elements of A, excepting those in B.
@@ -118,21 +119,32 @@ Composite transformations (i.e. transformations created by performing P, L, or R
 
 All Neo-Riemannian Transformations are involutions and are equivalent to a TnI operation, though order is preserved.
 The following methods are not transformations but are available for working with Neo-Riemannian transformations:
+When the argument takes a string as input, the string is not case-sensitive and characters other than p, l, r, n, h, and s are ignored
 
-* neo(string) - A generator that takes string input and yields the resulting set after each transformation. The input string is not case-sensitive and characters other than p, l, r, n, h, and s are ignored.
+* transform(string) - Returns a set equal to the given set after each transformation in the string is performed successively. 
+* neo(string) - A generator that takes string input and yields the resulting set after each transformation. 
 * cycle(string) - A generator that performs neo successively until the original set is reached. In this way .cycle("plr") would generate the PLR cycle.
+* paths(object) - Takes another PSet as an argument, and returns a list of strings in which each string lists the transformations that can be applied to the original set to reach the input set. Only P, L, and R are used for the search.
 
-This brief example shows the use of each of these helper methods::
+The following examples show the Neo-Riemannian transformation methods in action::
 
-    a = PSet(0, 4, 7)
-    for each in a.neo("plpr"):
+    a = PSet(0, 4, 7, ordered=True)
+    b = a.H()
+    print a.P().L().P() == a.H() == b
+    Out: True
+    print a.paths(a)
+    Out: ['PP', 'RR', 'LL']
+    print a.paths(b)
+    Out: ['LPL', 'PLP']
+    c = a.transform('prl')
+    for each in a.neo('prl'):
         print each
     Out: [0, 3, 7]
-         [0, 3, 8]
-         [-1, 3, 8]
-         [-1, 3, 6]
-
-    for each in a.cycle("pl"):
+         [-2, 3, 7]
+         [-2, 2, 7]
+    print c
+    Out: [-2, 2, 7]
+    for each in a.cycle('pl'):
         print each
     Out: [0, 3, 7]
          [0, 3, 8]
@@ -140,3 +152,5 @@ This brief example shows the use of each of these helper methods::
          [-1, 4, 8]
          [-1, 4, 7]
          [0, 4, 7]
+
+N.B. - The output for .cycle('pl') is a hexatonic system (Richard Cohn). In the example above, this was the "Northern" cycle.
