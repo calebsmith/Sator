@@ -230,11 +230,6 @@ class PSet(SetBase):
         def get_branches(obj):
             return ((f(), f) for f in (obj.P, obj.L, obj.R))
 
-        # Make a tree with keys p, l, and r and values P(), L(), and R()
-        tree = {}
-        for branch, f in get_branches(self):
-            tree[f.__name__] = branch
-
         def prune_append(obj, tree, first=True):
             # return paths when goal is reached, otherwise prune current ones
             # and append the next transformation, then check again
@@ -248,4 +243,8 @@ class PSet(SetBase):
                      if obj._pc_set == other._pc_set]
             return paths if paths else prune_append(other, tree, first=False)
 
+        # Make a tree with keys p, l, and r and values P(), L(), and R()
+        tree = {}
+        for branch, f in get_branches(self):
+            tree[f.__name__] = branch
         return prune_append(self, tree)
