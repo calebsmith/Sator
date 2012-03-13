@@ -5,5 +5,3 @@ __all__ = [
     'utils',
     'const',
 ]
-
-import core, sim, utils, const
