@@ -1,5 +1,14 @@
 #!/usr/bin/env python
+from __future__ import division
 from sator.const import FORTE_NAMES, FORTE_INTS
+
+
+# Force Python 2.X to use xrange
+try:
+    range = xrange
+except:
+    pass
+
 
 def transpose(pitches, sub_n=0):
     """
@@ -36,7 +45,7 @@ def setint(pcs):
 def fromint(integer):
         result = []
         limit = len(bin(integer)) - 2
-        each_digit = [2 ** n for n in xrange(limit, -1, -1)]
+        each_digit = [2 ** n for n in range(limit, -1, -1)]
         for index, digit in enumerate(each_digit):
             if integer >= digit:
                 integer -= digit
@@ -57,9 +66,9 @@ def from_forte(fname):
         return None
 
 def icv(pcs, mod=12):
-    icv_length = (mod / 2) + 1;
-    result = [0 for num in xrange(0, icv_length)]
-    icvs = xrange(0, icv_length)
+    icv_length = (mod // 2) + 1;
+    result = [0 for num in range(0, icv_length)]
+    icvs = range(0, icv_length)
     for pc in pcs:
         for cv in icvs:
             if (pc + cv) % mod in pcs:
@@ -69,14 +78,14 @@ def icv(pcs, mod=12):
     return result
 
 def _supers_n_plus_1(pcs, mod):
-    for index in xrange(0, mod):
+    for index in range(0, mod):
         if index not in pcs:
             result = pcs[:]
             result.append(index)
             yield result
 
 def _subs_n_minus_1(pcs):
-    for index in xrange(0, len(pcs)):
+    for index in range(0, len(pcs)):
         yield [pc for i, pc in enumerate(pcs) if i != index]
 
 def supersets(pcs, mod, limit=0):

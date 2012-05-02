@@ -5,6 +5,12 @@ from unittest import TestCase, main
 from sator.core import PCSet, PSet
 import sator.utils
 
+# Force Python 2.X to use xrange
+try:
+    range = xrange
+except:
+    pass
+
 
 """Test pc and set methods"""
 class NeoRTest(TestCase):
@@ -100,7 +106,7 @@ class NeoRTest(TestCase):
         self.assertEqual(set(self.a.paths(self.a)), set(['PP', 'LL', 'RR']))
         fs = ['p', 'l', 'r', 'z']
         opers = ""
-        for n in xrange(0, random.randint(0, 10)):
+        for n in range(0, random.randint(0, 10)):
             opers += random.choice(fs)
         paths = self.a.paths(self.a.transform(opers))
         path = random.choice(paths)

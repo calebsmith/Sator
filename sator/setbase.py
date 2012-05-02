@@ -1,5 +1,14 @@
 #!/usr/bin/env python
-from itertools import count, izip, combinations
+from itertools import count, combinations
+
+# Force Python 2.X to use izip and xrange
+try:
+    from itertools import izip as zip
+except:
+    pass
+else:
+    # Only executes on Python 2.X
+    range = xrange
 
 import sator.utils as utils
 from sator.const import Z_PARTNERS
@@ -17,7 +26,7 @@ class SetBase(SetRowBase):
     def __sub__(self, other):
         """Remove all instances of a given pc from a pcset"""
         rm_pcs = other
-        if isinstance(other, (int, long)):
+        if isinstance(other, int):
             rm_pcs = [other]
         if isinstance(other, set):
             rm_pcs = [int(num) for num in other]
@@ -122,7 +131,7 @@ class SetBase(SetRowBase):
 
     @classmethod
     def each_set_in_mod(cls, mod):
-        return(cls(utils.fromint(integer), mod=mod) for integer in xrange(0, 2 ** mod))
+        return(cls(utils.fromint(integer), mod=mod) for integer in range(0, 2 ** mod))
 
     @classmethod
     def each_prime_in_mod(cls, mod):
@@ -232,9 +241,9 @@ class SetBase(SetRowBase):
         A property that returns (n, m) to perform on the given object via TnMm
         in order to obtain its prime form.
         """
-        low_vals =[min(izip(operation, count())) \
+        low_vals =[min(zip(operation, count())) \
             for operation in self._rotation_ints]
-        min_val = min(izip(low_vals, count()))
+        min_val = min(zip(low_vals, count()))
         n = min_val[0][1]
         oper = min_val[1]
         if oper == 0:

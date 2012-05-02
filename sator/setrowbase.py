@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 from itertools import permutations
 
+# Force Python 2.X to use xrange
+try:
+    range = xrange
+except:
+    pass
+
 import sator.utils as utils
 from sator.const import MAX_OCTAVE
 
@@ -41,7 +47,7 @@ class SetRowBase(object):
         ps = other
         if isinstance(other, SetRowBase):
             ps = other.pitches[:]
-        if isinstance(other, (int, long)):
+        if isinstance(other, int):
             ps = [other]
         if isinstance(other, (tuple, list)):
             ps = list(other)
@@ -96,7 +102,7 @@ class SetRowBase(object):
             return self.copy(l)
 
     def __setitem__(self, key, value):
-        if isinstance(value, (int, long)):
+        if isinstance(value, int):
             new = abs(value) % (MAX_OCTAVE * self.mod())
             if value < 0:
                 new = new * -1
@@ -257,7 +263,7 @@ class SetRowBase(object):
         """
         Same as the instance method but takes one positional arg as the modulus
         """
-        for num in xrange(0, mod):
+        for num in range(0, mod):
             yield num
 
     def each_tto(self):

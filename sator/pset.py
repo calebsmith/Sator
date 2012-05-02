@@ -235,7 +235,7 @@ class PSet(SetBase):
             # and append the next transformation, then check again
             if not first:
                 # Only prune after the first time through
-                for name in tree.keys():
+                for name in list(tree.keys()):
                     obj = tree.pop(name)
                     for branch, f in get_branches(obj):
                         tree[name + f.__name__] = branch

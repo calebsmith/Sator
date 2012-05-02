@@ -4,6 +4,12 @@ from unittest import TestCase, main
 from sator.core import PCSet, PSet
 import sator.utils as utils
 
+# Force Python 2.X to use xrange
+try:
+    range = xrange
+except:
+    pass
+
 
 """Test pc and set methods"""
 class PCSetifyTests(TestCase):
@@ -281,7 +287,7 @@ class EachTest(TestCase):
     def testEach_set_in_mod(self):
         for each in PCSet.each_set_in_mod(10):
             self.assertEqual(each.mod(), 10)
-        self.assertEqual(each, list(xrange(0, 10)))
+        self.assertEqual(each, list(range(0, 10)))
 
     def testEach_tto(self):
         def check_each_tto(mod):
@@ -289,7 +295,7 @@ class EachTest(TestCase):
             ttos = list(a.each_tto())
             index = 0
             for m in (1, -1, 5, mod - 5):
-                for n in xrange(0, mod):
+                for n in range(0, mod):
                     self.assertEqual(ttos[index], (n, m))
                     index += 1  
         check_each_tto(12)
@@ -299,8 +305,8 @@ class EachTest(TestCase):
     def testEach_card(self):
         card = 2
         mod = 13
-        a = PCSet(range(0, card), mod=mod)
-        aggregate = PCSet(range(0, mod), mod=mod)
+        a = PCSet(list(range(0, card)), mod=mod)
+        aggregate = PCSet(list(range(0, mod)), mod=mod)
         for each, each_static in zip(a.each_card(), PCSet.each_card_in_mod(card, mod)):
             self.assertEqual(each.cardinality, card)
             self.assertEqual(each.mod(), mod)

@@ -8,14 +8,14 @@ class NoSuchTestError(Exception): pass
 
 def match(name):
     if name not in alltests:
-        raise NoSuchTestError, "Test '%s' not found." % name
+        raise NoSuchTestError("Test {0} not found.".format(name))
     else:
         return name
 
 def run(testnames, level=2):
     for name in testnames:
         if name:
-            print "Testing Pyset module: %s" % name
+            print("Testing Pyset module: {0}".format(name))
             test = 'test.' + name
             suite = unittest.TestLoader().loadTestsFromName(test)
             unittest.TextTestRunner(verbosity=level).run(suite)

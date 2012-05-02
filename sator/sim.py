@@ -43,7 +43,7 @@ def iv(a, b):
             lookfor = (pc + n) % a.mod()
             if lookfor in b.pcs:
                 ivect[n] += 1
-    return ivect.values()
+    return list(ivect.values())
 
 def sim(a, b):
     """
