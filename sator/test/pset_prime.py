@@ -250,6 +250,13 @@ class PrimeReliantTests(PrimeTestCase):
             each.z()
             self.assertTrue(each.pcint in Z_PARTNERS.values())
 
+    def testZPartner_non_mod_12(self):
+        a = PCSet(3, 5, 8)
+        a.mod(13)
+        b = a.zpartner
+        self.assertEqual(b, [0, 2, 10])
+        self.assertEqual(a.icv, b.icv)
+
     def testEachPrime(self):
         a = PCSet()
         for prime in a.each_prime():

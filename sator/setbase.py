@@ -328,7 +328,7 @@ class SetBase(SetRowBase):
         for each in self.each_card():
             if each.icv == self.icv:
                 if each.prime._unique_pcs != self.prime._unique_pcs:
-                    return self.copy(p)
+                    return self.copy(each)
 
     @property
     def invariance_vector(self):
