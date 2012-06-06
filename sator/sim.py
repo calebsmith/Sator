@@ -23,20 +23,29 @@ def zc(a, b):
 
 """ Similarity Functions """
 
-def _check_mod(a, b):
-    # Verify the sets have the same modulus. Most functions are defined if the
-    # input sets are different moduli.
-    return False if a.mod() == b.mod() else True
 
-"""Robert Morris"""
+class DifferentModuliException(Exception):
+    pass
+
+
+def check_mod(a, b):
+    """
+    Raise an exception if the sets have do not have the same modulus. Most
+    functions are undefined if the input sets are different moduli.
+    """
+    err_msg = 'Similarity relations between sets of different moduli are undefined'
+    if a.mod() != b.mod():
+        raise DifferentModuliException(err_msg)
+
+
+"""Robert Morris functions"""
 def iv(a, b):
     """
     How many of each ordered interval is expressed from the PC's of a to those
     of b. -Robert Morris' IV(a, b) as described in
     "Composition with Pitch Classes" 1987
     """
-    if _check_mod(a, b):
-        return NotImplemented
+    check_mod(a, b)
     ivect = dict([(n, 0) for n in a.each_n()])
     for pc in a.uo_pcs:
         for n in a.each_n():
@@ -45,30 +54,29 @@ def iv(a, b):
                 ivect[n] += 1
     return list(ivect.values())
 
+
 def sim(a, b):
     """
     The sum of differences between the icvs of sets a and b (excluding icv0)
     - Robert Morris SIM(a, b)
     """
-    if _check_mod(a, b):
-        return NotImplemented
+    check_mod(a, b)
     # Skip the first interval class, which is the cardinality.
     return sum([abs(ic[0] - ic[1]) for ic in zip(a.icv[1:], b.icv[1:])])
 
+
 def asim(a, b, rational=False):
-    if _check_mod(a, b):
-        return NotImplemented
     """
     The sum of differences between the icvs of sets a and b (excluding icv0)
     divided by the total icvs in both sets, which is equal to the highest
     possible difference.
 
-    Takes the kwarg rational. If true, returns a rational number in the form of
-    a two tuple.
-    Defaults to rational=False
+    Takes 'rational', which returns a rational number in the form of a two
+    tuple when True. Defaults to rational=False
 
     - Robert Morris ASIM(a, b)
     """
+    check_mod(a, b)
     sim = asim = 0
     for ic in zip(a.icv[1:], b.icv[1:]):
         sim += abs(ic[0] - ic[1])

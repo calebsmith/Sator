@@ -6,8 +6,7 @@ from sator.sim import *
 
 class SimMZCTests(TestCase):        
     def setUp(self):
-        self.l = [0, 1, 2, 4, 5, 8]
-        self.pcset = PCSet(self.l)
+        self.pcset = PCSet([0, 1, 2, 4, 5, 8])
         self.pcset_z = PCSet([0, 1, 3, 7])
 
     def testM(self):
@@ -44,7 +43,9 @@ class SimMZCTests(TestCase):
 
     def testcheckmod(self):
         a = self.pcset
-        b = PCSet(0, 3, mod=7)
-        self.assertEqual(iv(a, b), NotImplemented)
-        self.assertEqual(sim(a, b), NotImplemented)
-        self.assertEqual(asim(a, b), NotImplemented)
+        b = PCSet([0, 3], mod=7)
+
+        with self.assertRaises(DifferentModuliException) as context:
+            iv(a, b)
+            sim(a, b)
+            asim(a, b)
