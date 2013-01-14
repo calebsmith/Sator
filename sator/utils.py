@@ -12,52 +12,60 @@ except:
 
 def transpose(pitches, sub_n=0):
     """
-    Given a list of pitches and n, returns an object of the same type after Tn
+    Given a list of pitches and n, returns a list of the pitches after Tn
     """
     return [pitch + sub_n for pitch in pitches]
 
+
 def invert(pitches, sub_n=0):
     """
-    Given an object and n, returns an object of the same type after TnI.
+    Given a list of pitches and n, returns a list of pitches after TnI.
     If n is not provided, n is assumed to be 0
     """
     return transpose(multiply(pitches, -1), sub_n)
 
+
 def multiply(pitches, sub_m):
     """
-    Given an object and n, returns an object of the same type after TnMm,
+    Given a list of pitches and m, returns a list of pitches T0Mm,
     where m is required. (For mod 12, m is usually 5.)
     """
     return [pitch * sub_m for pitch in pitches]
 
+
 def transpose_multiply(pitches, sub_n, sub_m):
     """
-    Given an object, n, and m, returns an object of the same type after TnMm.
+    Given a list of pitches, n, and m, returns a list of pitches after TnMm.
     All arguments are required.
     """
     result = multiply(pitches, sub_m)
     return transpose(result, sub_n)
 
+
 def setint(pcs):
     """Find the integer representation of an unordered PC set"""
     return sum([2 ** pc for pc in pcs])
 
+
 def fromint(integer):
-        result = []
-        limit = len(bin(integer)) - 2
-        each_digit = [2 ** n for n in range(limit, -1, -1)]
-        for index, digit in enumerate(each_digit):
-            if integer >= digit:
-                integer -= digit
-                result.append(limit - index)
-        result.sort()
-        return result
+    result = []
+    limit = len(bin(integer)) - 2
+    each_digit = [2 ** n for n in range(limit, -1, -1)]
+    for index, digit in enumerate(each_digit):
+        if integer >= digit:
+            integer -= digit
+            result.append(limit - index)
+    result.sort()
+    return result
+
 
 def forte_name(setint):
-	return FORTE_NAMES.get(setint)
+    return FORTE_NAMES.get(setint)
+
 
 def forte_int(fname):
-    return FORTE_INTS.get(fname)       
+    return FORTE_INTS.get(fname)
+
 
 def from_forte(fname):
     try:
@@ -65,8 +73,9 @@ def from_forte(fname):
     except:
         return None
 
+
 def icv(pcs, mod=12):
-    icv_length = (mod // 2) + 1;
+    icv_length = (mod // 2) + 1
     result = [0 for num in range(0, icv_length)]
     icvs = range(0, icv_length)
     for pc in pcs:
@@ -77,6 +86,7 @@ def icv(pcs, mod=12):
         result[icv_length - 1] = result[icv_length - 1] / 2
     return result
 
+
 def _supers_n_plus_1(pcs, mod):
     for index in range(0, mod):
         if index not in pcs:
@@ -84,9 +94,11 @@ def _supers_n_plus_1(pcs, mod):
             result.append(index)
             yield result
 
+
 def _subs_n_minus_1(pcs):
     for index in range(0, len(pcs)):
         yield [pc for i, pc in enumerate(pcs) if i != index]
+
 
 def supersets(pcs, mod, limit=0):
     if not limit:
@@ -101,6 +113,7 @@ def supersets(pcs, mod, limit=0):
             if len(current) < mod and len(current) < limit:
                 for pcs in supersets(current, mod, limit):
                     yield pcs
+
 
 def subsets(pcs, limit=0):
     # FIXME: Raise a useful exception rather than just yielding None
