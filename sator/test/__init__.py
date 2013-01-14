@@ -1,8 +1,8 @@
-__all__ = [ 
+__all__ = [
     'pset_basic',
     'pset_oper',
     'pset_prime',
     'tonerow',
-    'sim_mzc',
+    'sim',
     'neo_r',
 ]

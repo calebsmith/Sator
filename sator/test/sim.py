@@ -2,7 +2,7 @@
 from unittest import TestCase
 
 from sator.core import PCSet
-from sator.sim import m, z, c, sim, asim, iv, DifferentModuliException
+from sator.sim import m, z, c, zc, sim, asim, iv, DifferentModuliException
 
 
 class SimMZCTests(TestCase):
@@ -50,3 +50,7 @@ class SimMZCTests(TestCase):
             iv(a, b)
             sim(a, b)
             asim(a, b)
+            m(a, b)
+            c(a, b)
+            z(a, b)
+            zc(a, b)
