@@ -1,11 +1,12 @@
 #!/usr/bin/env python
-from unittest import TestCase, main
+from unittest import TestCase
 
-from sator.core import PCSet, PSet
+from sator.core import PCSet
 import sator.utils as utils
 from sator.const import Z_PARTNERS
 
-class PrimeTestCase(TestCase):        
+
+class PrimeTestCase(TestCase):
     def setUp(self):
         self.l = [0, 1, 2, 3, 4, 6]
         self.set_ints = [0, 4095, 392, 661, 583, 203, 2741, 584, 394, 858]
@@ -16,7 +17,7 @@ class PrimeTestCase(TestCase):
         self.m_rots = list(self.pcset._m_rotations())
         self.mi_rots = list(self.pcset._mi_rotations())
 
-"""Test prime and related subfunctions"""
+
 class PrimeAndRotationsTest(PrimeTestCase):
     """Methods that generate lists of PCSets after TnTm operations"""
 
@@ -33,7 +34,7 @@ class PrimeAndRotationsTest(PrimeTestCase):
         self.all_rots = [self.t_rots] + [self.i_rots] + [self.m_rots] + \
             [self.mi_rots]
 
-    def make_canons(self):    
+    def make_canons(self):
         for canon_t in [True, False]:
             for canon_i in [True, False]:
                 for canon_m in [True, False]:
@@ -174,7 +175,7 @@ class PrimeAndRotationsTest(PrimeTestCase):
                          [],
                          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                          [2, 5, 7, 8],
-                         [4, 5, 7, 11]                            
+                         [4, 5, 7, 11]
         ])
 
 

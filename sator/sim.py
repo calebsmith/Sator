@@ -6,22 +6,7 @@ Module for similarity relations/functions between two pitch or pitch class sets
 from __future__ import division
 
 
-"""Functions for determining if the two sets are m, z, or c partners"""
-
-def z(a, b):
-    return a.zpartner == b.prime
-
-def c(a, b):
-    return a.abstract_compliment == b.prime
-
-def m(a, b):
-    return a.mpartner == b.prime
-
-def zc(a, b):
-    return z(a, b) and c(a, b)
-
-
-""" Similarity Functions """
+"""Helper Functions and Exceptions"""
 
 
 class DifferentModuliException(Exception):
@@ -38,7 +23,28 @@ def check_mod(a, b):
         raise DifferentModuliException(err_msg)
 
 
-"""Robert Morris functions"""
+"""Functions for determining if the two sets are m, z, or c partners"""
+
+
+def z(a, b):
+    return a.zpartner == b.prime
+
+
+def c(a, b):
+    return a.abstract_compliment == b.prime
+
+
+def m(a, b):
+    return a.mpartner == b.prime
+
+
+def zc(a, b):
+    return z(a, b) and c(a, b)
+
+
+""" Similarity Functions """
+
+
 def iv(a, b):
     """
     How many of each ordered interval is expressed from the PC's of a to those

@@ -1,10 +1,12 @@
 #!/usr/bin/env python
-from unittest import TestCase, main
+from unittest import TestCase
 
-from sator.core import PCSet, PSet
-from sator.sim import *
+from sator.core import PCSet
+from sator.sim import m, z, c, sim, asim, iv, DifferentModuliException
 
-class SimMZCTests(TestCase):        
+
+class SimMZCTests(TestCase):
+
     def setUp(self):
         self.pcset = PCSet([0, 1, 2, 4, 5, 8])
         self.pcset_z = PCSet([0, 1, 3, 7])
@@ -44,7 +46,6 @@ class SimMZCTests(TestCase):
     def testcheckmod(self):
         a = self.pcset
         b = PCSet([0, 3], mod=7)
-
         with self.assertRaises(DifferentModuliException) as context:
             iv(a, b)
             sim(a, b)

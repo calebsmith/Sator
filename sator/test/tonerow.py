@@ -1,10 +1,11 @@
 #!/usr/bin/env python
-from unittest import TestCase, main
+from unittest import TestCase
 
 from sator.core import ToneRow
 
 
-class ToneRowTests(TestCase):        
+class ToneRowTests(TestCase):
+
     def setUp(self):
         self.l = [0, 4, 5, 8, 9, 1, 10, 3, 6, 2, 7, 11]
         self.tonerow = ToneRow(self.l)
@@ -35,4 +36,4 @@ class ToneRowTests(TestCase):
         i = self.tonerow._invert()
         ri = i.ppc
         ri.reverse()
-        self.assertEqual(self.tonerow.RI, ri)       
+        self.assertEqual(self.tonerow.RI, ri)
