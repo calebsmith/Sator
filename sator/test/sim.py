@@ -46,11 +46,11 @@ class SimMZCTests(TestCase):
     def testcheckmod(self):
         a = self.pcset
         b = PCSet([0, 3], mod=7)
-        with self.assertRaises(DifferentModuliException) as context:
-            iv(a, b)
-            sim(a, b)
-            asim(a, b)
-            m(a, b)
-            c(a, b)
-            z(a, b)
-            zc(a, b)
+        sim_funcs = (iv, sim, asim, m, c, z, zc)
+        for func in sim_funcs:
+            try:
+                func(a, b)
+            except DifferentModuliException:
+                pass
+            else:
+                self.fail('DifferentModuliException should be thrown')

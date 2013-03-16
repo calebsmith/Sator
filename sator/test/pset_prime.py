@@ -258,10 +258,6 @@ class PrimeReliantTests(PrimeTestCase):
         self.assertEqual(b, [0, 2, 10])
         self.assertEqual(a.icv, b.icv)
 
-    def testEachPrime(self):
-        a = PCSet()
-        for prime in a.each_prime():
-            self.assertEqual(prime.prime, prime._unique_pcs)
 
 class SubsetsTest(TestCase):
 
