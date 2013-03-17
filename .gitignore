@@ -1,7 +1,7 @@
 docs/_build
 /dist
 /build
-/tox
+/.tox
 *.egg-info
 *.pyc
 *.o

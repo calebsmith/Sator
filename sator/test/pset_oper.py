@@ -87,52 +87,38 @@ class TnTmInPlace(TestCase):
         self.c = self.a.copy()
 
     def testT(self):
-        a = self.a
-        b = self.b
-        a.t(5)
-        b.t(-2)
+        a = self.a.t(5)
+        b = self.b.t(-2)
         self.assertEqual(a.pitches, [5, -10, 25, 9, 7, 5])
         self.assertEqual(b.pitches, [-2, -17, 18, 2, 0, -2])
 
     def testI(self):
-        a = self.a
-        b = self.b
-        c = self.c
-        a.i()
-        b.i()
-        c.i(3)
+        a = self.a.i()
+        b = self.b.i()
+        c = self.c.i(3)
         self.assertEqual(a.pitches, [0, 15, -20, -4, -2, 0])
         self.assertEqual(a, b.pcs)
         self.assertEqual(b.pitches, a.pitches)
         self.assertEqual(c.pitches, [3, 18, -17, -1, 1, 3])
 
     def testM(self):
-        a = self.a
-        b = self.b
-        a.m()
-        b.m(3)
+        a = self.a.m()
+        b = self.b.m(3)
         self.assertEqual(a._unique_pcs, [0, 4, 8, 9, 10])
         self.assertEqual(b._unique_pcs, [0, 1, 3, 7, 11])
 
     def testMi(self):
-        a = self.a
-        b = self.b
-        c = self.c
-        a.mi()
-        b.m()
-        b.i()
-        c.mi(5)
+        a = self.a.mi()
+        b = self.b.mi()
+        c = self.c.mi(5)
         self.assertEqual(a._unique_pcs, [0, 2, 3, 4, 8])
         self.assertEqual(a, b)
         self.assertEqual(c._unique_pcs, [1, 5, 7, 8, 9])
 
     def testTm(self):
-        a = self.a
-        b = a.copy()
-        c = b.copy()
-        a.t_m(0, 1)
-        b.t_m(1, 5)
-        c.t_m(5, -1)
+        a = self.a.t_m(0, 1)
+        b = self.a.t_m(1, 5)
+        c = self.b.t_m(5, -1)
         self.assertEqual(a._unique_pcs, [0, 2, 4, 8, 9])
         self.assertEqual(b._unique_pcs, [1, 5, 9, 10, 11])
         self.assertEqual(c._unique_pcs, [1, 3, 5, 8, 9])

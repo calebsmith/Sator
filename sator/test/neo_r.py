@@ -32,7 +32,7 @@ class NeoRTest(TestCase):
         self.assertEqual(a.P().P(), a)
         self.assertEqual(a.P(), [0, 3, 7])
         self.assertEqual((a + [0, 4, 4, 0, 7]).P(), [0, 3, 7, 0, 3, 3, 0, 7])
-        a.i(8)
+        a = a.i(8)
         # a is Db major. a.P is Db minor
         self.assertEqual(a.P(), [8, 5, 1])
 
@@ -42,7 +42,7 @@ class NeoRTest(TestCase):
         self.assertEqual(a.R().R(), a)
         self.assertEqual(a.R(), [0, 4, 9])
         self.assertEqual((a + [0, 4, 4, 0, 7]).R(), [0, 4, 9, 0, 4, 4, 0, 9])
-        a.i(1)
+        a = a.i(1)
         # a is F# minor, a.R() is A major
         self.assertEqual(a.R(), [1, -3, -8])
 
@@ -52,7 +52,7 @@ class NeoRTest(TestCase):
         self.assertEqual(a.L().L(), a)
         self.assertEqual(a.L(), [-1, 4, 7])
         self.assertEqual((a + [0, 4, 4, 0, 7]).L(), [-1, 4, 7, -1, 4, 4, -1, 7])
-        a.i(5)
+        a = a.i(5)
         # a is Bb minor, a.L() is Gb major
         self.assertEqual(a.L(), [6, 1, -2])
 

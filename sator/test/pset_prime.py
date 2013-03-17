@@ -215,7 +215,7 @@ class PrimeReliantTests(PrimeTestCase):
     def testCompliment(self):
         for each in self.sets:
             other = each.copy()
-            other.c()
+            other = other.c()
             self.assertEqual(each.literal_compliment, other)
 
     def testAbstractCompliment(self):

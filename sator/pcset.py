@@ -11,14 +11,17 @@ class PCSet(SetBase, PCBase):
     pitchset = False
 
     def c(self):
-        """Change the given object in place to its literal compliment."""
-        self[:] = self.literal_compliment.pitches
+        """
+        Return a new instance that represents the literal compliment of the
+        current one
+        """
+        return self.copy(self.literal_compliment.pitches)
 
     def z(self):
         """
-        Change the given object in place to its Z-partner if possible.
-        Otherwise leave the object unchanged.        
+        Return a new instance that represents the the Z-partner of the current
+        instance if possible, Otherwise return None
         """
         other = self.zpartner
         if other:
-            self[:] = other.pitches
+            return self.copy(other.pitches)

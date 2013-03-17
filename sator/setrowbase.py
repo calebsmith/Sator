@@ -297,15 +297,15 @@ class SetRowBase(object):
         return self.copy(result)
 
     def t(self, sub_n):
-        """Transpose the object in place by the argument provided."""
-        self[:] = (self._transpose(sub_n)).pitches
+        """Return an instance of the current object transposed by n"""
+        return self.copy(self._transpose(sub_n).pitches)
 
     def i(self, sub_n=0):
         """
-        Invert the object in place. If an argument is provided, also transpose
-        the object in place by that amount.
+        Return an instance of the current object after it is inverted, if an
+        argument is provided, the new instance is transposed by that amount
         """
-        self[:] = (self._invert(sub_n)).pitches
+        return self.copy(self._invert(sub_n).pitches)
 
     @property
     def t_rotations(self):
@@ -356,23 +356,28 @@ class PCBase(object):
 
     def m(self, sub_n=0):
         """
-        Perform M on the object in place. If an argument is provided, also
-        transpose the object in place by that amount.
+        Return a new instance of this object after M is performed. If an
+        argument is provided, also transpose the object by that amount.
         """
-        self[:] = (self._transpose_multiply(sub_n, self._default_m)).pitches
+        return self.copy(
+            (self._transpose_multiply(sub_n, self._default_m)).pitches
+        )
 
     def mi(self, sub_n=0):
         """
-        Perform M and I on the object in place. If an argument is provided,
-        also transpose the object in play by that amount.
+        Return a new instance of this object after MI is performed. If an
+        argument is provided, also transpose the object by that amount.
         """
         sub_m = self._mod - self._default_m
-        self[:] = (self._transpose_multiply(sub_n, sub_m)).pitches
-        
+        return self.copy(
+            (self._transpose_multiply(sub_n, sub_m)).pitches
+        )
+
     def t_m(self, sub_n, sub_m):
         """
-        Perform TnMm on the object in place, where n and m are positional
-        arguments. If n is not provided, it defaults to 0. If m is not provided
-        it defaults to the default_m of the object.
+        Return a new instance of this object after TnMm is performed, where n
+        and m are positional arguments.
         """
-        self[:] = (self._transpose_multiply(sub_n, sub_m)).pitches
+        return self.copy(
+            (self._transpose_multiply(sub_n, sub_m)).pitches
+        )
