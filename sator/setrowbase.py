@@ -10,6 +10,7 @@ except:
 import sator.utils as utils
 from sator.const import MAX_OCTAVE
 
+
 class SetRowBase(object):
     """Base class for PC/pitch sets and tone rows"""
 
@@ -119,9 +120,6 @@ class SetRowBase(object):
     def __repr__(self):
         return str(self.ppc)
 
-    def __copy__(self):
-        return copy(self)
-
     def copy(self, pitches=None, **kwargs):
         """Use to copy a ToneRow/PSet/PCSet with all data attributes."""
         if pitches is None:
@@ -137,6 +135,9 @@ class SetRowBase(object):
             new.canon(self._canon_t, self._canon_i, self._canon_m)
         new._default_m = self._default_m
         return new
+
+    def __copy__(self):
+        return self.copy()
 
     class InvalidModulus(Exception):
         pass
@@ -171,7 +172,7 @@ class SetRowBase(object):
         (The default for all objects is False. ToneRows cannot be multisets)
         Without an argument, returns the current setting.
         """
-        if value is not None:        
+        if value is not None:
             self._multiset = True if value else False
         else:
             return self._multiset
@@ -263,8 +264,7 @@ class SetRowBase(object):
         """
         Same as the instance method but takes one positional arg as the modulus
         """
-        for num in range(0, mod):
-            yield num
+        return (num for num in range(0, mod))
 
     def each_tto(self):
         """
@@ -292,9 +292,10 @@ class SetRowBase(object):
     def _transpose_multiply(self, sub_n=0, sub_m=0):
         if not sub_m:
             sub_m = self._default_m
-        result = [pc % self._mod for pc in \
-                  utils.transpose_multiply(self.pcs, sub_n, sub_m)]
-        return self.copy(result)
+        return self.copy([
+            pc % self._mod
+            for pc in utils.transpose_multiply(self.pcs, sub_n, sub_m)
+        ])
 
     def t(self, sub_n):
         """Return an instance of the current object transposed by n"""
@@ -313,8 +314,10 @@ class SetRowBase(object):
         Returns a list of objects for each possible transposition of the given
         object.
         """
-        return [self.copy(rot) for rot in [self._transpose(n) \
-                                           for n in self.each_n()]]
+        return [
+            self.copy(rot)
+            for rot in [self._transpose(n) for n in self.each_n()]
+        ]
 
     @property
     def i_rotations(self):
@@ -322,8 +325,10 @@ class SetRowBase(object):
         Returns a list of objects for each possible transposition of the given
         object after inversion.
         """
-        return [self.copy(rot) for rot in [self._invert(n) \
-                                           for n in self.each_n()]]
+        return [
+            self.copy(rot)
+            for rot in [self._invert(n) for n in self.each_n()]
+        ]
 
     @property
     def m_rotations(self):
@@ -331,8 +336,10 @@ class SetRowBase(object):
         Returns a list of objects for each possible transposition of the given
         object after M.
         """
-        return [self.copy(rot) for rot in [self._transpose_multiply(n) \
-                                           for n in self.each_n()]]
+        return [
+            self.copy(rot)
+            for rot in [self._transpose_multiply(n) for n in self.each_n()]
+        ]
 
     @property
     def mi_rotations(self):
@@ -340,8 +347,13 @@ class SetRowBase(object):
         Returns a list of objects for each possible transposition of the given
         object after MI.
         """
-        return [self.copy(rot) for rot in [self._transpose_multiply(n, self._default_m * -1) \
-                                           for n in self.each_n()]]
+        return [
+            self.copy(rot)
+            for rot in [
+                self._transpose_multiply(n, self._default_m * -1)
+                for n in self.each_n()
+            ]
+        ]
 
     @property
     def all_rotations(self):

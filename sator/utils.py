@@ -44,7 +44,7 @@ def transpose_multiply(pitches, sub_n, sub_m):
 
 def setint(pcs):
     """Find the integer representation of an unordered PC set"""
-    return sum([2 ** pc for pc in pcs])
+    return sum(2 ** pc for pc in pcs)
 
 
 def fromint(integer):

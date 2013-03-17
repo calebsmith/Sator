@@ -80,7 +80,7 @@ def sim(a, b):
     which represents the cardinality of each set)
     - Robert Morris SIM(a, b)
     """
-    return sum([abs(ic_a - ic_b) for ic_a, ic_b in zip(a.icv[1:], b.icv[1:])])
+    return sum(abs(ic_a - ic_b) for ic_a, ic_b in zip(a.icv[1:], b.icv[1:]))
 
 
 @require_same_modulus
