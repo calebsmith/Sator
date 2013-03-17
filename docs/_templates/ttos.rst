@@ -33,9 +33,8 @@ Below are some examples::
     print a.i()
     Out: [0, 3, 8]
     print a.m()
-    print a
-    Out: [7, 10, 11]
+    Out: [0, 8, 9]
     print a.mi()
-    Out: [1, 5, 10]
+    Out: [0, 3, 4]
     print a.t_m(1, 11)
-    Out: [0, 3, 8]
+    Out: [1, 4, 9]
