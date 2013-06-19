@@ -64,7 +64,7 @@ def iv(a, b):
     of b. -Robert Morris' IV(a, b) as described in
     "Composition with Pitch Classes" 1987
     """
-    ivect = dict([(n, 0) for n in a.each_n()])
+    ivect = dict((n, 0) for n in a.each_n())
     for pc in a.uo_pcs:
         for n in a.each_n():
             lookfor = (pc + n) % a.mod()
